@@ -1,7 +1,7 @@
 package com.nkm;
 
 public class Basket {
-    public void add(Item item) {
+    public void add(int count, Item item) {
 
     }
 }

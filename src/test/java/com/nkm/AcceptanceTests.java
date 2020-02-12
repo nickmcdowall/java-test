@@ -1,6 +1,5 @@
 package com.nkm;
 
-import com.nkm.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -20,23 +19,23 @@ public class AcceptanceTests {
 
     @Test
     void priceThreeSoupTinsAndTwoBreadLoavesBoughtToday() {
-        LocalDate yesterday = now().minusDays(1);
-        Discount discount = new DateRangeDiscount(sevenDayFrom(yesterday), halfPriceBreadWithTWoSoupTins());
+        Discount discount = new DateRangeDiscount(periodOfDaysFrom(yesterday(), 7), halfPriceBreadWithTWoSoupTins());
 
         pricingService = new PricingService(discount);
 
         Basket basket = new Basket();
-        basket.add(TIN_SOUP);
-        basket.add(TIN_SOUP);
-        basket.add(TIN_SOUP);
-        basket.add(BREAD_LOAF);
-        basket.add(BREAD_LOAF);
+        basket.add(3, TIN_SOUP);
+        basket.add(2, BREAD_LOAF);
 
         assertThat(pricingService.price(basket, now())).isEqualTo(3.15);
     }
 
-    private Period sevenDayFrom(LocalDate startDate) {
-        return between(startDate, startDate.plusDays(7));
+    private LocalDate yesterday() {
+        return now().minusDays(1);
+    }
+
+    private Period periodOfDaysFrom(LocalDate startDate, int daysToAdd) {
+        return between(startDate, startDate.plusDays(daysToAdd));
     }
 
     private Function<Basket, Double> halfPriceBreadWithTWoSoupTins() {
