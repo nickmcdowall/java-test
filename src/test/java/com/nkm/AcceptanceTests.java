@@ -16,6 +16,7 @@ public class AcceptanceTests {
     private static final BreadLoaf BREAD_LOAF = new BreadLoaf(0.80);
 
     private PricingService pricingService;
+    private Basket basket = new Basket();
 
     @Test
     void priceThreeSoupTinsAndTwoBreadLoavesBoughtToday() {
@@ -23,7 +24,6 @@ public class AcceptanceTests {
 
         pricingService = new PricingService(discount);
 
-        Basket basket = new Basket();
         basket.add(3, TIN_SOUP);
         basket.add(2, BREAD_LOAF);
 
@@ -34,7 +34,6 @@ public class AcceptanceTests {
     void priceThreeSoupTinsAndTwoBreadLoavesBoughtTodayWithoutDiscount() {
         pricingService = new PricingService();
 
-        Basket basket = new Basket();
         basket.add(3, TIN_SOUP);
         basket.add(2, BREAD_LOAF);
 
