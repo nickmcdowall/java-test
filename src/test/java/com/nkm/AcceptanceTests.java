@@ -1,5 +1,6 @@
 package com.nkm;
 
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -39,7 +40,7 @@ public class AcceptanceTests {
     void priceBasketWithoutDiscount(Basket basket, double expectedPrice) {
         pricingService = new PricingService();
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(expectedPrice);
+        assertThat(pricingService.price(basket, now())).isEqualTo(expectedPrice, Offset.offset(0.001));
     }
 
     private static Stream<Arguments> basketsNoDiscount() {

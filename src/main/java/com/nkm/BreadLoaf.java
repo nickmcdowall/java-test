@@ -1,7 +1,15 @@
 package com.nkm;
 
 public class BreadLoaf implements Item {
-    public BreadLoaf(double price) {
+    
+    private double price;
 
+    public BreadLoaf(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
     }
 }

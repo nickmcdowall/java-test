@@ -1,7 +1,14 @@
 package com.nkm;
 
 public class TinSoup implements Item {
-    public TinSoup(double price) {
+    private double price;
 
+    public TinSoup(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public double getPrice() {
+        return price;
     }
 }
