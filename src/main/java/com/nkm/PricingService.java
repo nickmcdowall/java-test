@@ -3,7 +3,7 @@ package com.nkm;
 import java.time.LocalDate;
 
 public class PricingService {
-    public PricingService(Discount discount) {
+    public PricingService(Discount... discount) {
 
     }
 

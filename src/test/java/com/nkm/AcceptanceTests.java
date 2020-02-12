@@ -30,6 +30,17 @@ public class AcceptanceTests {
         assertThat(pricingService.price(basket, now())).isEqualTo(3.15);
     }
 
+    @Test
+    void priceThreeSoupTinsAndTwoBreadLoavesBoughtTodayWithoutDiscount() {
+        pricingService = new PricingService();
+
+        Basket basket = new Basket();
+        basket.add(3, TIN_SOUP);
+        basket.add(2, BREAD_LOAF);
+
+        assertThat(pricingService.price(basket, now())).isEqualTo(3.55);
+    }
+
     private LocalDate yesterday() {
         return now().minusDays(1);
     }
