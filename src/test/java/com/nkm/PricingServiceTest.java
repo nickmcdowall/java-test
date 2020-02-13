@@ -4,6 +4,7 @@ import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
@@ -22,9 +23,15 @@ public class PricingServiceTest {
 
     private PricingService pricingService;
 
-    @Test
-    void priceThreeSoupTinsAndTwoBreadLoavesBoughtToday() {
-        Discount discount = new DateRangeDiscount(periodOfDaysFrom(yesterday(), 7), halfPriceBreadWithTWoSoupTins());
+    @ParameterizedTest
+    @CsvSource(value = {
+            "0.4, 3.15",
+            "0.2, 3.35",
+            "0.1, 3.45",
+            "3.55, 0.0",
+    })
+    void pricingServiceSubtractsDiscountForValidDate(double discountAmount, double priceToPay) {
+        Discount discount = new DateRangeDiscount(periodOfDaysFrom(yesterday(), 7), aFixedDiscountOf(discountAmount));
 
         pricingService = new PricingService(discount);
 
@@ -32,7 +39,7 @@ public class PricingServiceTest {
                 .with(3, TIN_SOUP)
                 .with(2, BREAD_LOAF);
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(3.15);
+        assertThat(pricingService.price(basket, now())).isEqualTo(priceToPay, Offset.offset(0.001));
     }
 
     @ParameterizedTest
@@ -60,7 +67,7 @@ public class PricingServiceTest {
         return between(startDate, startDate.plusDays(daysToAdd));
     }
 
-    private Function<Basket, Double> halfPriceBreadWithTWoSoupTins() {
-        return null;
+    private Function<Basket, Double> aFixedDiscountOf(double discount) {
+        return basket -> discount;
     }
 }

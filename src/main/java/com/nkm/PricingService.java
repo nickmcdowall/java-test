@@ -14,6 +14,10 @@ public class PricingService {
     }
 
     public double price(Basket basket, LocalDate date) {
-        return (discounts.isEmpty()) ? basket.totalCost() : 3.15;
+        double totalDiscount = discounts.stream()
+                .mapToDouble(discount -> discount.apply(basket))
+                .sum();
+
+        return basket.totalCost() - totalDiscount;
     }
 }
