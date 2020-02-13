@@ -15,6 +15,7 @@ public class PricingService {
 
     public double price(Basket basket, LocalDate date) {
         double totalDiscount = discounts.stream()
+                .filter(discount -> discount.isValid(date))
                 .mapToDouble(discount -> discount.apply(basket))
                 .sum();
 

@@ -13,7 +13,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
-import static java.time.Period.between;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PricingServiceTest {
@@ -32,7 +31,7 @@ public class PricingServiceTest {
             "3.55, 0.0",
     })
     void pricingServiceSubtractsDiscountForValidDate(double discountAmount, double priceToPay) {
-        Discount discount = new DateRangeDiscount(periodOfDaysFrom(yesterday(), 7), aFixedDiscountOf(discountAmount));
+        Discount discount = new DateRangeDiscount(now(), Period.ofDays(7), aFixedDiscountOf(discountAmount));
 
         pricingService = new PricingService(discount);
 
@@ -45,7 +44,7 @@ public class PricingServiceTest {
 
     @Test
     void discountValidFromTodayNotAppliedWhenPricedForYesterday() {
-        Discount discount = new DateRangeDiscount(periodOfDaysFrom(now(), 7), aFixedDiscountOf(0.4));
+        Discount discount = new DateRangeDiscount(now(), Period.ofDays(7), aFixedDiscountOf(0.4));
 
         pricingService = new PricingService(discount);
 
@@ -73,10 +72,6 @@ public class PricingServiceTest {
 
     private LocalDate yesterday() {
         return now().minusDays(1);
-    }
-
-    private Period periodOfDaysFrom(LocalDate startDate, int daysToAdd) {
-        return between(startDate, startDate.plusDays(daysToAdd));
     }
 
     private Function<Basket, Double> aFixedDiscountOf(double discount) {
