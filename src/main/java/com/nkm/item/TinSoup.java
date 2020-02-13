@@ -1,10 +1,11 @@
-package com.nkm;
+package com.nkm.item;
 
-public class BreadLoaf implements Item {
-    
+import com.nkm.item.Item;
+
+public class TinSoup implements Item {
     private double price;
 
-    public BreadLoaf(double price) {
+    public TinSoup(double price) {
         this.price = price;
     }
 

@@ -1,5 +1,7 @@
 package com.nkm;
 
+import com.nkm.discount.Discount;
+
 import java.time.LocalDate;
 import java.util.List;
 

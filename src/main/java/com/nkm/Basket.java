@@ -1,5 +1,7 @@
 package com.nkm;
 
+import com.nkm.item.Item;
+
 import java.util.ArrayList;
 import java.util.List;
 

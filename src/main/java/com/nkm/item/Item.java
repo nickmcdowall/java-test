@@ -1,4 +1,4 @@
-package com.nkm;
+package com.nkm.item;
 
 public interface Item {
     double getPrice();
