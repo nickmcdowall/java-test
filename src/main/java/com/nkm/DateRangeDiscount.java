@@ -16,6 +16,10 @@ public class DateRangeDiscount implements Discount {
         this.calculation = calculation;
     }
 
+    public DateRangeDiscount(LocalDate startDate, Function<Basket, Double> calculation) {
+        this(startDate, Period.ofDays(0), calculation);
+    }
+
     @Override
     public double apply(Basket basket) {
         return calculation.apply(basket);

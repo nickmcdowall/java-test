@@ -1,19 +1,18 @@
 package com.nkm;
 
 import org.assertj.core.data.Offset;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class PricingServiceTest {
 
@@ -24,54 +23,52 @@ public class PricingServiceTest {
     private PricingService pricingService;
 
     @ParameterizedTest
-    @CsvSource(value = {
-            "0.4, 3.15",
-            "0.2, 3.35",
-            "0.1, 3.45",
-            "3.55, 0.0",
+    @ValueSource(doubles = {
+            0.8, 0.5, 0.4, 0.3, 0.0,
     })
-    void pricingServiceSubtractsDiscountForValidDate(double discountAmount, double priceToPay) {
-        Discount discount = new DateRangeDiscount(now(), Period.ofDays(7), aFixedDiscountOf(discountAmount));
-
-        pricingService = new PricingService(discount);
-
-        Basket basket = new Basket()
-                .with(3, TIN_SOUP)
-                .with(2, BREAD_LOAF);
-
-        assertThat(pricingService.price(basket, now())).isEqualTo(priceToPay, OFFSET);
-    }
-
-    @Test
-    void discountValidFromTodayNotAppliedWhenPricedForYesterday() {
-        Discount discount = new DateRangeDiscount(now(), Period.ofDays(7), aFixedDiscountOf(0.4));
-
-        pricingService = new PricingService(discount);
+    void discountAppliedWhenPaidOnValidDiscountDate(double discountAmount) {
+        pricingService = new PricingService(
+                new DateRangeDiscount(today(), aFixedDiscountOf(discountAmount)));
 
         Basket basket = new Basket().with(1, BREAD_LOAF);
 
-        assertThat(pricingService.price(basket, yesterday())).isEqualTo(0.8, OFFSET);
+        assertThat(pricingService.price(basket, today()))
+                .isEqualTo(basket.totalCost() - discountAmount, OFFSET);
     }
 
     @ParameterizedTest
-    @MethodSource("basketsNoDiscount")
-    void priceBasketWithoutDiscount(Basket basket, double expectedPrice) {
+    @ValueSource(ints = {
+            -99, -1, +1, +99
+    })
+    void fullPriceWhenPaidBeforeOrAfterDiscountDate(int paymentDayOffset) {
+        pricingService = new PricingService(
+                new DateRangeDiscount(today(), aFixedDiscountOf(0.4)));
+
+        Basket basket = new Basket().with(5, BREAD_LOAF);
+
+        assertThat(pricingService.price(basket, now().plusDays(paymentDayOffset)))
+                .isEqualTo(basket.totalCost(), OFFSET);
+    }
+
+    @ParameterizedTest
+    @MethodSource("variousBaskets")
+    void fullPriceWhenNoDiscountsAvailable(Basket basket) {
         pricingService = new PricingService();
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(expectedPrice, OFFSET);
+        assertThat(pricingService.price(basket, now())).isEqualTo(basket.totalCost(), OFFSET);
     }
 
-    private static Stream<Arguments> basketsNoDiscount() {
+    private LocalDate today() {
+        return now();
+    }
+
+    private static Stream<Arguments> variousBaskets() {
         return Stream.of(
-                Arguments.of(new Basket(), 0),
-                Arguments.of(new Basket().with(1, BREAD_LOAF), 0.80),
-                Arguments.of(new Basket().with(1, TIN_SOUP), 0.65),
-                Arguments.of(new Basket().with(3, TIN_SOUP).with(2, BREAD_LOAF), 3.55)
+                arguments(new Basket()),
+                arguments(new Basket().with(1, BREAD_LOAF)),
+                arguments(new Basket().with(1, TIN_SOUP)),
+                arguments(new Basket().with(3, TIN_SOUP).with(2, BREAD_LOAF))
         );
-    }
-
-    private LocalDate yesterday() {
-        return now().minusDays(1);
     }
 
     private Function<Basket, Double> aFixedDiscountOf(double discount) {
