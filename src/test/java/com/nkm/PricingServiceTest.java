@@ -15,7 +15,7 @@ import static java.time.LocalDate.now;
 import static java.time.Period.between;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AcceptanceTests {
+public class PricingServiceTest {
 
     private static final TinSoup TIN_SOUP = new TinSoup(0.65);
     private static final BreadLoaf BREAD_LOAF = new BreadLoaf(0.80);
