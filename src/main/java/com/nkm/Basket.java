@@ -4,6 +4,7 @@ import com.nkm.item.Item;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.stream.IntStream.range;
 
@@ -24,5 +25,9 @@ public class Basket {
     public Basket with(int count, Item item) {
         add(count, item);
         return this;
+    }
+
+    public Stream<Item> stream() {
+        return items.stream();
     }
 }

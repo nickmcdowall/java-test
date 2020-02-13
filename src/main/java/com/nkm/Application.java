@@ -7,15 +7,18 @@ import java.time.LocalDate;
 public class Application {
 
 
-    public Application(PricingService pricingService) {
+    private PricingService pricingService;
+    private Basket basket = new Basket();
 
+    public Application(PricingService pricingService) {
+        this.pricingService = pricingService;
     }
 
     public void addBasketItem(int count, Item item) {
-
+        basket.add(count, item);
     }
 
     public double priceUp(LocalDate whenBought) {
-        return 0;
+        return pricingService.price(basket, whenBought);
     }
 }
