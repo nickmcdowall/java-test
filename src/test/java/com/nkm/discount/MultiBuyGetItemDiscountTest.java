@@ -4,33 +4,35 @@ import com.nkm.Basket;
 import com.nkm.item.BreadLoaf;
 import com.nkm.item.TinSoup;
 import org.assertj.core.data.Offset;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MultiBuyGetItemDiscountTest {
 
-    @Test
-    void discountOnAdditionalItemOfSameType() {
-        MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, BreadLoaf.class, 0.5, TinSoup.class);
+    private final MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, BreadLoaf.class, 0.5, TinSoup.class);
 
+    @ParameterizedTest(name = "{0} loaves, {1} soups with total discount: {2}")
+    @CsvSource({
+            "1, 1, 0",
+            "2, 1, 50",
+            "2, 2, 50",
+            "3, 1, 50",
+            "4, 1, 50",
+            "4, 2, 100",
+            "6, 0, 0",
+            "6, 1, 50",
+            "6, 2, 100",
+            "6, 3, 150",
+    })
+    void discountOnEligibleBasket(int noOfLoaves, int noOfSoups, double expectedDiscount) {
         Double discountCalculated = discount.apply(new Basket()
-                .with(3, new BreadLoaf(5))
-                .with(1, new TinSoup(100))
+                .with(noOfLoaves, new BreadLoaf(5))
+                .with(noOfSoups, new TinSoup(100))
         );
 
-        assertThat(discountCalculated).isEqualTo(50.00, Offset.offset(0.001));
+        assertThat(discountCalculated).isEqualTo(expectedDiscount, Offset.offset(0.001));
     }
 
-    @Test
-    void noDiscountWhenBasketItemCountIsTooLow() {
-        MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, BreadLoaf.class, 0.5, TinSoup.class);
-
-        Double discountCalculated = discount.apply(new Basket()
-                .with(1, new BreadLoaf(5))
-                .with(1, new TinSoup(100))
-        );
-
-        assertThat(discountCalculated).isEqualTo(0.00, Offset.offset(0.001));
-    }
 }
