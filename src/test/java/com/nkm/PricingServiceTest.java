@@ -20,6 +20,7 @@ public class PricingServiceTest {
 
     private static final TinSoup TIN_SOUP = new TinSoup(0.65);
     private static final BreadLoaf BREAD_LOAF = new BreadLoaf(0.80);
+    private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
     private PricingService pricingService;
 
@@ -39,7 +40,18 @@ public class PricingServiceTest {
                 .with(3, TIN_SOUP)
                 .with(2, BREAD_LOAF);
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(priceToPay, Offset.offset(0.001));
+        assertThat(pricingService.price(basket, now())).isEqualTo(priceToPay, OFFSET);
+    }
+
+    @Test
+    void discountValidFromTodayNotAppliedWhenPricedForYesterday() {
+        Discount discount = new DateRangeDiscount(periodOfDaysFrom(now(), 7), aFixedDiscountOf(0.4));
+
+        pricingService = new PricingService(discount);
+
+        Basket basket = new Basket().with(1, BREAD_LOAF);
+
+        assertThat(pricingService.price(basket, yesterday())).isEqualTo(0.8, OFFSET);
     }
 
     @ParameterizedTest
@@ -47,7 +59,7 @@ public class PricingServiceTest {
     void priceBasketWithoutDiscount(Basket basket, double expectedPrice) {
         pricingService = new PricingService();
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(expectedPrice, Offset.offset(0.001));
+        assertThat(pricingService.price(basket, now())).isEqualTo(expectedPrice, OFFSET);
     }
 
     private static Stream<Arguments> basketsNoDiscount() {
