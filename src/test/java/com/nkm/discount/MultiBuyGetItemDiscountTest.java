@@ -21,4 +21,16 @@ class MultiBuyGetItemDiscountTest {
 
         assertThat(discountCalculated).isEqualTo(50.00, Offset.offset(0.001));
     }
+
+    @Test
+    void noDiscountWhenBasketItemCountIsTooLow() {
+        MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, BreadLoaf.class, 0.5, TinSoup.class);
+
+        Double discountCalculated = discount.apply(new Basket()
+                .with(1, new BreadLoaf(5))
+                .with(1, new TinSoup(100))
+        );
+
+        assertThat(discountCalculated).isEqualTo(0.00, Offset.offset(0.001));
+    }
 }

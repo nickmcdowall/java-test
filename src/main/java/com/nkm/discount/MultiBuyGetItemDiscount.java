@@ -26,7 +26,7 @@ public class MultiBuyGetItemDiscount implements Function<Basket, Double> {
     public Double apply(Basket basket) {
         List<Item> multiItems = filterByType(basket, multiItemClass);
 
-        int hits = multiItems.size() % itemCount;
+        int hits = multiItems.size() / itemCount;
 
         List<Item> targetItem = filterByType(basket, discountItemClass);
 
