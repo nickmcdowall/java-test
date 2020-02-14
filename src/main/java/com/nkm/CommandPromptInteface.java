@@ -22,6 +22,10 @@ public class CommandPromptInteface {
                     " - Type 'exit' to quit to application.\n" +
                     " - Type 'checkout' to get the final price.";
 
+    public static void main(String[] args) {
+        start(new Scanner(System.in), System.out);
+    }
+
     public static void start(Scanner scanner, PrintStream out) {
         new CommandPromptInteface(scanner, out);
     }
