@@ -20,8 +20,7 @@ public class CommandPromptInteface {
     public static final String INSTRUCTIONS =
             " - Type 'add <x> <ItemType>' to add x number of items to the basket.\n" +
                     " - Type 'exit' to quit to application.\n" +
-                    " - Type 'checkout' to get the final price.\n" +
-                    " - Type 'restart' to empty the basket and start again.";
+                    " - Type 'checkout' to get the final price.";
 
     public static void start(Scanner scanner, PrintStream out) {
         new CommandPromptInteface(scanner, out);
