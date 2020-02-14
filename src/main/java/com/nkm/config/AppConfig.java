@@ -5,9 +5,9 @@ import com.nkm.PricingService;
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.FixedPercentageItemDiscount;
 import com.nkm.discount.MultiBuyGetItemDiscount;
-import com.nkm.item.Apple;
-import com.nkm.item.Bread;
-import com.nkm.item.Soup;
+import com.nkm.stock.Apple;
+import com.nkm.stock.Bread;
+import com.nkm.stock.Soup;
 
 import java.time.LocalDate;
 import java.time.Period;

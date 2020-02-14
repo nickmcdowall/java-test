@@ -1,8 +1,8 @@
 package com.nkm.discount;
 
 import com.nkm.Basket;
-import com.nkm.item.Bread;
-import com.nkm.item.Soup;
+import com.nkm.stock.Bread;
+import com.nkm.stock.Soup;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;

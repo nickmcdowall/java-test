@@ -1,11 +1,10 @@
 package com.nkm;
 
-import com.nkm.item.Item;
+import com.nkm.stock.Item;
 
 import java.time.LocalDate;
 
 public class Application {
-
 
     private PricingService pricingService;
     private Basket basket = new Basket();

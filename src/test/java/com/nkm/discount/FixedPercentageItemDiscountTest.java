@@ -1,9 +1,9 @@
 package com.nkm.discount;
 
 import com.nkm.Basket;
-import com.nkm.item.Apple;
-import com.nkm.item.Milk;
-import com.nkm.item.Item;
+import com.nkm.stock.Apple;
+import com.nkm.stock.Milk;
+import com.nkm.stock.Item;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

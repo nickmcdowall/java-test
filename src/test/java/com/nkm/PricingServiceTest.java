@@ -2,8 +2,8 @@ package com.nkm;
 
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.Discount;
-import com.nkm.item.Bread;
-import com.nkm.item.Soup;
+import com.nkm.stock.Bread;
+import com.nkm.stock.Soup;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

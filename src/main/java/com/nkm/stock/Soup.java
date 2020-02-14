@@ -1,4 +1,4 @@
-package com.nkm.item;
+package com.nkm.stock;
 
 public class Soup implements Item {
     private double price;

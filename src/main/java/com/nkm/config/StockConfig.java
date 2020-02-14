@@ -1,6 +1,6 @@
 package com.nkm.config;
 
-import com.nkm.item.*;
+import com.nkm.stock.*;
 
 import java.util.Map;
 

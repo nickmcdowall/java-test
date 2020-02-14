@@ -2,7 +2,7 @@ package com.nkm;
 
 import com.nkm.config.AppConfig;
 import com.nkm.config.StockConfig;
-import com.nkm.item.Item;
+import com.nkm.stock.Item;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
