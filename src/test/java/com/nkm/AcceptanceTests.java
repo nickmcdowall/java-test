@@ -73,6 +73,15 @@ public class AcceptanceTests {
         assertThat(application.priceUp(lastDayOfMonth(nextMonth).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
 
+    @Test
+    void multiDiscountsApplied() {
+        application.addBasketItem(3, apple);
+        application.addBasketItem(2, tinSoup);
+        application.addBasketItem(1, breadLoaf);
+
+        assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_OFFSET);
+    }
+
     private LocalDate lastDayOfMonth(LocalDate date) {
         int lengthOfMonth = date.getMonth().length(date.isLeapYear());
         return date.withDayOfMonth(lengthOfMonth);
