@@ -25,33 +25,33 @@ class CommandPromptIntefaceTest {
 
     @Test
     void handleExit() {
-        Scanner scanner = new Scanner(lines("exit"));
+        Scanner scanner = new Scanner("exit");
 
         CommandPromptInteface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                lines(GREETING, INSTRUCTIONS, GOODBYE)
+                joinedByNewline(GREETING, INSTRUCTIONS, GOODBYE)
         );
     }
 
     @ParameterizedTest
     @MethodSource("variousValidAddCommands")
-    void handleAddItemCommand(String addCommand, List<String> expectedOutputLines) {
-        Scanner scanner = new Scanner(lines(addCommand, "exit"));
+    void handleAddItemCommand(String command, List<String> expectedOutputLines) {
+        Scanner scanner = new Scanner(joinedByNewline(command, "exit"));
 
         CommandPromptInteface.start(scanner, new PrintStream(outputStream));
 
-        assertThat(outputStream.toString()).contains(lines(expectedOutputLines));
+        assertThat(outputStream.toString()).contains(joinedByNewline(expectedOutputLines));
     }
 
     @Test
     void checkoutWithItemsTest() {
-        Scanner scanner = new Scanner(lines("add 1 Bread", "checkout"));
+        Scanner scanner = new Scanner(joinedByNewline("add 1 Bread", "checkout"));
 
         CommandPromptInteface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                lines(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
+                joinedByNewline(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
         );
     }
 
@@ -64,11 +64,11 @@ class CommandPromptIntefaceTest {
         );
     }
 
-    private String lines(String... userInput) {
-        return lines(asList(userInput));
+    private String joinedByNewline(String... userInput) {
+        return joinedByNewline(asList(userInput));
     }
 
-    private String lines(List<String> userInput) {
+    private String joinedByNewline(List<String> userInput) {
         return userInput.stream()
                 .collect(joining(lineSeparator()));
     }
