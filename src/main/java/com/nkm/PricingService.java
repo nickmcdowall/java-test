@@ -1,5 +1,6 @@
 package com.nkm;
 
+import com.nkm.discount.DateSensitive;
 import com.nkm.discount.Discount;
 
 import java.time.LocalDate;
@@ -17,10 +18,17 @@ public class PricingService {
 
     public double price(Basket basket, LocalDate date) {
         double totalDiscount = discounts.stream()
-                .filter(discount -> discount.isValid(date))
+                .filter(discount -> validForGivenDate(date, discount))
                 .mapToDouble(discount -> discount.apply(basket))
                 .sum();
 
         return basket.totalCost() - totalDiscount;
+    }
+
+    private boolean validForGivenDate(LocalDate date, Discount discount) {
+        if (discount instanceof DateSensitive) {
+            return ((DateSensitive) discount).isValid(date);
+        }
+        return true;
     }
 }

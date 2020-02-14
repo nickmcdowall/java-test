@@ -4,11 +4,10 @@ import com.nkm.Basket;
 import com.nkm.item.Item;
 
 import java.util.List;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.toList;
 
-public class MultiBuyGetItemDiscount implements Function<Basket, Double> {
+public class MultiBuyGetItemDiscount implements Discount {
 
     private final int itemCount;
     private final Class<? extends Item> multiItemClass;
@@ -23,7 +22,7 @@ public class MultiBuyGetItemDiscount implements Function<Basket, Double> {
     }
 
     @Override
-    public Double apply(Basket basket) {
+    public double apply(Basket basket) {
         List<Item> multiItems = filterByType(basket, multiItemClass);
 
         int hits = multiItems.size() / itemCount;

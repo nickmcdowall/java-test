@@ -1,6 +1,7 @@
 package com.nkm;
 
 import com.nkm.discount.DateRangeDiscount;
+import com.nkm.discount.Discount;
 import com.nkm.item.BreadLoaf;
 import com.nkm.item.TinSoup;
 import org.assertj.core.data.Offset;
@@ -10,7 +11,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.time.LocalDate.now;
@@ -74,7 +74,7 @@ public class PricingServiceTest {
         );
     }
 
-    private Function<Basket, Double> aFixedDiscountOf(double discount) {
+    private Discount aFixedDiscountOf(double discount) {
         return basket -> discount;
     }
 }

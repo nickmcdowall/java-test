@@ -4,27 +4,26 @@ import com.nkm.Basket;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.function.Function;
 
-public class DateRangeDiscount implements Discount {
+public class DateRangeDiscount implements Discount, DateSensitive {
 
     private final LocalDate startDate;
     private final LocalDate endDate;
-    private final Function<Basket, Double> calculation;
+    private final Discount delegate;
 
-    public DateRangeDiscount(LocalDate startDate, Period validPeriod, Function<Basket, Double> calculation) {
+    public DateRangeDiscount(LocalDate startDate, Period validPeriod, Discount delegate) {
         this.startDate = startDate;
         this.endDate = startDate.plus(validPeriod);
-        this.calculation = calculation;
+        this.delegate = delegate;
     }
 
-    public DateRangeDiscount(LocalDate startDate, Function<Basket, Double> calculation) {
-        this(startDate, Period.ofDays(0), calculation);
+    public DateRangeDiscount(LocalDate startDate, Discount delegate) {
+        this(startDate, Period.ofDays(0), delegate);
     }
 
     @Override
     public double apply(Basket basket) {
-        return calculation.apply(basket);
+        return delegate.apply(basket);
     }
 
     @Override
