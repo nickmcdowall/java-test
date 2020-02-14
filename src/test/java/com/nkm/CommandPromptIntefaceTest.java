@@ -28,6 +28,17 @@ class CommandPromptIntefaceTest {
         );
     }
 
+    @Test
+    void handleAddItemCommand() {
+        Scanner scanner = new Scanner(lines("add 1 Apple","exit"));
+
+        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                lines(GREETING, INSTRUCTIONS,"+ 1 Apple added", GOODBYE)
+        );
+    }
+
     private String lines(String... userInput) {
         return asList(userInput).stream()
                 .collect(joining(lineSeparator()));
