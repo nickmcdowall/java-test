@@ -58,9 +58,9 @@ class CommandPromptIntefaceTest {
     private static Stream<Arguments> variousValidAddCommands() {
         return Stream.of(
                 arguments("add 2 Apple", List.of("+ 2 Apple added")),
-                arguments("add 1 TinSoup add 1 TinSoup", List.of("+ 1 TinSoup added", "+ 1 TinSoup added")),
-                arguments("add 1 Bread add 1 BottleMilk", List.of("+ 1 Bread added", "+ 1 BottleMilk added")),
-                arguments("add 13 Apple add 0 TinSoup", List.of("+ 13 Apple added", "+ 0 TinSoup added"))
+                arguments("add 1 Soup add 1 Soup", List.of("+ 1 Soup added", "+ 1 Soup added")),
+                arguments("add 1 Bread add 1 Milk", List.of("+ 1 Bread added", "+ 1 Milk added")),
+                arguments("add 13 Apple add 0 Soup", List.of("+ 13 Apple added", "+ 0 Soup added"))
         );
     }
 

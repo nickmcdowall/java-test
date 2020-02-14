@@ -1,7 +1,7 @@
 package com.nkm;
 
 import com.nkm.config.AppConfig;
-import com.nkm.config.StockItems;
+import com.nkm.config.StockConfig;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -33,7 +33,7 @@ public class CommandPromptInteface {
     private final Scanner scanner;
     private final PrintStream out;
     private final AppConfig appConfig = new AppConfig();
-    private final StockItems stockItems = new StockItems();
+    private final StockConfig stockConfig = new StockConfig();
     private Application app = appConfig.getApplication();
 
     private CommandPromptInteface(Scanner scanner, PrintStream out) {
@@ -66,7 +66,7 @@ public class CommandPromptInteface {
         while (matcher.find()) {
             int count = Integer.valueOf(matcher.group(1));
             String itemType = matcher.group(2);
-            app.addBasketItem(count, stockItems.getItemByKey(itemType));
+            app.addBasketItem(count, stockConfig.getItemByKey(itemType));
             out.println(format("+ %s %s added", count, itemType));
         }
     }
