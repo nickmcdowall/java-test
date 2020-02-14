@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 
 public class Basket {
@@ -29,5 +30,11 @@ public class Basket {
 
     public Stream<Item> stream() {
         return items.stream();
+    }
+
+    public List<Item> filterByType(Class<? extends Item> itemClass) {
+        return items.stream()
+                .filter(item -> item.getClass().equals(itemClass))
+                .collect(toList());
     }
 }

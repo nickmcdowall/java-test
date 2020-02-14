@@ -5,17 +5,15 @@ import com.nkm.item.Item;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
-
 public class MultiBuyGetItemDiscount implements Discount {
 
-    private final int itemCount;
+    private final int requiredItemCount;
     private final Class<? extends Item> multiItemClass;
     private final double percentageDiscount;
     private final Class<? extends Item> discountItemClass;
 
-    public MultiBuyGetItemDiscount(int itemCount, Class<? extends Item> multiItemClass, double percentageDiscount, Class<? extends Item> discountItemClass) {
-        this.itemCount = itemCount;
+    public MultiBuyGetItemDiscount(int requiredItemCount, Class<? extends Item> multiItemClass, double percentageDiscount, Class<? extends Item> discountItemClass) {
+        this.requiredItemCount = requiredItemCount;
         this.multiItemClass = multiItemClass;
         this.percentageDiscount = percentageDiscount;
         this.discountItemClass = discountItemClass;
@@ -23,21 +21,14 @@ public class MultiBuyGetItemDiscount implements Discount {
 
     @Override
     public double apply(Basket basket) {
-        List<Item> multiItems = filterByType(basket, multiItemClass);
+        List<Item> multiItems = basket.filterByType(multiItemClass);
+        int maxTimesDiscountCanBeApplied = multiItems.size() / requiredItemCount;
+        List<Item> targetItems = basket.filterByType(discountItemClass);
 
-        int hits = multiItems.size() / itemCount;
-
-        List<Item> targetItem = filterByType(basket, discountItemClass);
-
-        return targetItem.stream()
-                .limit(hits)
+        return targetItems.stream()
+                .limit(maxTimesDiscountCanBeApplied)
                 .mapToDouble(Item::getPrice)
                 .sum() * percentageDiscount;
     }
 
-    private List<Item> filterByType(Basket basket, Class<? extends Item> itemClass) {
-        return basket.stream()
-                .filter(item -> item.getClass().equals(itemClass))
-                .collect(toList());
-    }
 }
