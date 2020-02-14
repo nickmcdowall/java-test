@@ -24,4 +24,20 @@ public class AcceptanceTests {
         assertThat(application.priceUp(now())).isEqualTo(3.15, ACCEPTABLE_OFFSET);
     }
 
+    @Test
+    void multiTinSoupOfferBoughtBeforeDiscountApplies() {
+        application.addBasketItem(3, tinSoup);
+        application.addBasketItem(2, breadLoaf);
+        assertThat(application.priceUp(now().minusDays(2))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
+    }
+
+    @Test
+    void multiTinSoupOfferBoughtAfterDiscountApplies() {
+        application.addBasketItem(3, tinSoup);
+        application.addBasketItem(2, breadLoaf);
+        assertThat(application.priceUp(now().plusDays(6))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
+    }
+
+
+
 }
