@@ -28,6 +28,7 @@ public class AcceptanceTests {
     void multiTinSoupOfferWhenBoughtInDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(3, tinSoup);
         application.addBasketItem(2, breadLoaf);
+
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.15, ACCEPTABLE_OFFSET);
     }
 
@@ -36,6 +37,7 @@ public class AcceptanceTests {
     void multiTinSoupOfferNotAppliedWhenBoughtOutsideDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(3, tinSoup);
         application.addBasketItem(2, breadLoaf);
+
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
     }
 
@@ -44,6 +46,7 @@ public class AcceptanceTests {
     void appleDiscountNotAppliedWhenBoughtBeforeDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, bottleMilk);
+
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
 
@@ -52,25 +55,24 @@ public class AcceptanceTests {
     void appleDiscountIsAppliedDuringDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, bottleMilk);
+
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
     }
 
     @Test
     void appleDiscountIsAppliedOnLastDayNextMonth() {
-        LocalDate nextMonth = now().plusMonths(1);
-
         application.addBasketItem(6, apple);
         application.addBasketItem(1, bottleMilk);
-        assertThat(application.priceUp(lastDayOfMonth(nextMonth))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
+
+        assertThat(application.priceUp(lastDayOfMonth(nextMonth()))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
     }
 
     @Test
     void appleDiscountIsNotAppliedAfterLastDayNextMonth() {
-        LocalDate nextMonth = now().plusMonths(1);
-
         application.addBasketItem(6, apple);
         application.addBasketItem(1, bottleMilk);
-        assertThat(application.priceUp(lastDayOfMonth(nextMonth).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
+
+        assertThat(application.priceUp(lastDayOfMonth(nextMonth()).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
 
     @Test
@@ -80,6 +82,10 @@ public class AcceptanceTests {
         application.addBasketItem(1, breadLoaf);
 
         assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_OFFSET);
+    }
+
+    private LocalDate nextMonth() {
+        return now().plusMonths(1);
     }
 
     private LocalDate lastDayOfMonth(LocalDate date) {
