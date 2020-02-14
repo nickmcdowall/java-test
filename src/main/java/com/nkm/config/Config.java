@@ -16,7 +16,7 @@ public class Config {
 
     private final LocalDate threeDaysHence = now().plusDays(3);
     private final LocalDate yesterday = now().minusDays(1);
-    private final Period untilEndOfFollowingMonth = Period.between(now(), lastDayOfMonth(now().plusMonths(1)));
+    private final Period untilEndOfFollowingMonth = Period.between(threeDaysHence, lastDayOfMonth(now().plusMonths(1)));
     private final FixedPercentageItemDiscount tenPercentOffApplesOffer = new FixedPercentageItemDiscount(Apple.class, 0.1);
     private final MultiBuyGetItemDiscount tinSoupMultiBuyOffer = new MultiBuyGetItemDiscount(2, TinSoup.class, 0.5, BreadLoaf.class);
 
