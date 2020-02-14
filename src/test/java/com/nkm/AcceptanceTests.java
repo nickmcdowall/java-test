@@ -10,16 +10,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AcceptanceTests {
 
+    private static final Offset<Double> ACCEPTABLE_OFFSET = Offset.offset(0.001);
+
     private final Config appConfig = new Config();
     private final Application application = appConfig.getApplication();
     private final Item tinSoup = appConfig.getTinSoup();
     private final Item breadLoaf = appConfig.getBreadLoaf();
 
     @Test
-    void multiTinSoupOffer() {
+    void multiTinSoupOfferBoughtNow() {
         application.addBasketItem(3, tinSoup);
         application.addBasketItem(2, breadLoaf);
-        assertThat(application.priceUp(now())).isEqualTo(3.15, Offset.offset(0.001));
+        assertThat(application.priceUp(now())).isEqualTo(3.15, ACCEPTABLE_OFFSET);
     }
 
 }
