@@ -5,10 +5,7 @@ import com.nkm.PricingService;
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.FixedPercentageItemDiscount;
 import com.nkm.discount.MultiBuyGetItemDiscount;
-import com.nkm.item.Apple;
-import com.nkm.item.BreadLoaf;
-import com.nkm.item.Item;
-import com.nkm.item.TinSoup;
+import com.nkm.item.*;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -39,9 +36,16 @@ public class Config {
         return new BreadLoaf(0.80);
     }
 
+    public Apple getApple() {
+        return new Apple(0.10);
+    }
+
     private LocalDate lastDayOfMonth(LocalDate date) {
         int lengthOfMonth = date.getMonth().length(date.isLeapYear());
         return date.withDayOfMonth(lengthOfMonth);
     }
 
+    public BottleMilk getBottleMilk() {
+        return new BottleMilk(1.3);
+    }
 }

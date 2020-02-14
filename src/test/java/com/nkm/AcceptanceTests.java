@@ -17,10 +17,12 @@ public class AcceptanceTests {
     private final Application application = appConfig.getApplication();
     private final Item tinSoup = appConfig.getTinSoup();
     private final Item breadLoaf = appConfig.getBreadLoaf();
+    private final Item apple = appConfig.getApple();
+    private final Item bottleMilk = appConfig.getBottleMilk();
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, +1, +2, +3, +4, +5})
-    void multiTinSoupOfferWhenBoughtNow(int offsetPurchaseDate) {
+    void multiTinSoupOfferWhenBoughtInDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(3, tinSoup);
         application.addBasketItem(2, breadLoaf);
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.15, ACCEPTABLE_OFFSET);
@@ -32,6 +34,14 @@ public class AcceptanceTests {
         application.addBasketItem(3, tinSoup);
         application.addBasketItem(2, breadLoaf);
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, +1, +2, +70})
+    void appleDiscountNotAppliedWhenBoughtOutsideDiscountWindow(int offsetPurchaseDate) {
+        application.addBasketItem(6, apple);
+        application.addBasketItem(1, bottleMilk);
+        assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
 
 }

@@ -1,10 +1,9 @@
 package com.nkm.item;
 
-public class Apple implements Item {
+public class BottleMilk implements Item {
+    private double cost;
 
-    private final double cost;
-
-    public Apple(double cost) {
+    public BottleMilk(double cost) {
         this.cost = cost;
     }
 
