@@ -44,11 +44,22 @@ class CommandPromptIntefaceTest {
         assertThat(outputStream.toString()).contains(lines(expectedOutputLines));
     }
 
+    @Test
+    void checkoutWithItemsTest() {
+        Scanner scanner = new Scanner(lines("add 1 Bread", "checkout"));
+
+        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                lines(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
+        );
+    }
+
     private static Stream<Arguments> variousValidAddCommands() {
         return Stream.of(
                 arguments("add 2 Apple", List.of("+ 2 Apple added")),
                 arguments("add 1 TinSoup add 1 TinSoup", List.of("+ 1 TinSoup added", "+ 1 TinSoup added")),
-                arguments("add 1 BreadLoaf add 1 BottleMilk", List.of("+ 1 BreadLoaf added", "+ 1 BottleMilk added")),
+                arguments("add 1 Bread add 1 BottleMilk", List.of("+ 1 Bread added", "+ 1 BottleMilk added")),
                 arguments("add 13 Apple add 0 TinSoup", List.of("+ 13 Apple added", "+ 0 TinSoup added"))
         );
     }

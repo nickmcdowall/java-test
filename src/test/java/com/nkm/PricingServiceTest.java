@@ -2,7 +2,7 @@ package com.nkm;
 
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.Discount;
-import com.nkm.item.BreadLoaf;
+import com.nkm.item.Bread;
 import com.nkm.item.TinSoup;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class PricingServiceTest {
 
     private static final TinSoup TIN_SOUP = new TinSoup(0.65);
-    private static final BreadLoaf BREAD_LOAF = new BreadLoaf(0.80);
+    private static final Bread BREAD_LOAF = new Bread(0.80);
     private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
     private PricingService pricingService;

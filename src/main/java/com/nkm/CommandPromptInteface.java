@@ -1,11 +1,15 @@
 package com.nkm;
 
+import com.nkm.config.AppConfig;
+import com.nkm.config.StockItems;
+
 import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
+import static java.time.LocalDate.now;
 import static java.util.regex.Pattern.compile;
 
 public class CommandPromptInteface {
@@ -25,6 +29,9 @@ public class CommandPromptInteface {
 
     private final Scanner scanner;
     private final PrintStream out;
+    private final AppConfig appConfig = new AppConfig();
+    private final StockItems stockItems = new StockItems();
+    private Application app = appConfig.getApplication();
 
     private CommandPromptInteface(Scanner scanner, PrintStream out) {
         this.scanner = scanner;
@@ -44,13 +51,20 @@ public class CommandPromptInteface {
                 processAddCommand(scanner.nextLine());
                 continue;
             }
+            if (scanner.hasNext("checkout")) {
+                scanner.nextLine();
+                out.println(format("= [Total Cost (today): %.2f]", app.priceUp(now())));
+            }
         }
     }
 
     private void processAddCommand(String text) {
         Matcher matcher = ADD_ITEM_PATTERN.matcher(text);
         while (matcher.find()) {
-            out.println(format("+ %s %s added", matcher.group(1), matcher.group(2)));
+            int count = Integer.valueOf(matcher.group(1));
+            String itemType = matcher.group(2);
+            app.addBasketItem(count, stockItems.getItemByKey(itemType));
+            out.println(format("+ %s %s added", count, itemType));
         }
     }
 
