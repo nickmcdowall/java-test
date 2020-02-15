@@ -57,7 +57,10 @@ public class CommandPromptInteface {
             if (scanner.hasNext("checkout")) {
                 scanner.nextLine();
                 out.println(format("= [Total Cost (today): %.2f]", app.priceUp(now())));
+                continue;
             }
+            String unknown = scanner.nextLine();
+            out.println(String.format("? unknown command '%s'", unknown));
         }
     }
 
