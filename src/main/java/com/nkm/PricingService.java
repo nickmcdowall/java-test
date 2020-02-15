@@ -6,6 +6,7 @@ import com.nkm.discount.Discount;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.lang.Math.max;
 import static java.util.Arrays.asList;
 
 public class PricingService {
@@ -22,7 +23,7 @@ public class PricingService {
                 .mapToDouble(discount -> discount.apply(basket))
                 .sum();
 
-        return basket.totalCost() - totalDiscount;
+        return max(0.0, basket.totalCost() - totalDiscount);
     }
 
     private boolean validForGivenDate(LocalDate date, Discount discount) {

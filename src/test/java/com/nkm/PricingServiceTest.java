@@ -5,6 +5,7 @@ import com.nkm.discount.Discount;
 import com.nkm.stock.Bread;
 import com.nkm.stock.Soup;
 import org.assertj.core.data.Offset;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class PricingServiceTest {
 
     private static final Soup TIN_SOUP = new Soup(0.65);
-    private static final Bread BREAD_LOAF = new Bread(0.80);
+    private static final Bread BREAD = new Bread(0.80);
     private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
     private PricingService pricingService;
@@ -33,7 +34,7 @@ public class PricingServiceTest {
         pricingService = new PricingService(
                 new DateRangeDiscount(today(), aFixedDiscountOf(discountAmount)));
 
-        Basket basket = new Basket().with(1, BREAD_LOAF);
+        Basket basket = new Basket().with(1, BREAD);
 
         assertThat(pricingService.price(basket, today()))
                 .isEqualTo(basket.totalCost() - discountAmount, OFFSET);
@@ -47,7 +48,7 @@ public class PricingServiceTest {
         pricingService = new PricingService(
                 new DateRangeDiscount(today(), aFixedDiscountOf(0.4)));
 
-        Basket basket = new Basket().with(5, BREAD_LOAF);
+        Basket basket = new Basket().with(5, BREAD);
 
         assertThat(pricingService.price(basket, now().plusDays(paymentDayOffset)))
                 .isEqualTo(basket.totalCost(), OFFSET);
@@ -61,6 +62,15 @@ public class PricingServiceTest {
         assertThat(pricingService.price(basket, now())).isEqualTo(basket.totalCost(), OFFSET);
     }
 
+    @Test
+    void preventScenarioWherePriceIsNegative() {
+        pricingService = new PricingService(aFixedDiscountOf(5.00));
+
+        Basket basket = new Basket().with(1, BREAD);
+
+        assertThat(pricingService.price(basket, now())).isGreaterThanOrEqualTo(0.0);
+    }
+
     private LocalDate today() {
         return now();
     }
@@ -68,9 +78,9 @@ public class PricingServiceTest {
     private static Stream<Arguments> variousBaskets() {
         return Stream.of(
                 arguments(new Basket()),
-                arguments(new Basket().with(1, BREAD_LOAF)),
+                arguments(new Basket().with(1, BREAD)),
                 arguments(new Basket().with(1, TIN_SOUP)),
-                arguments(new Basket().with(3, TIN_SOUP).with(2, BREAD_LOAF))
+                arguments(new Basket().with(3, TIN_SOUP).with(2, BREAD))
         );
     }
 
