@@ -73,6 +73,21 @@ class CommandPromptIntefaceTest {
         );
     }
 
+    @Test
+    void handleUnknownStockItems() {
+        Scanner scanner = new Scanner(joinedByNewline("add 1 Cheese","add 1 Butter", "add 1 Bread", "checkout"));
+
+        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                joinedByNewline(GREETING, INSTRUCTIONS,
+                        "! No stock item exists with key: Cheese",
+                        "! No stock item exists with key: Butter",
+                        "+ 1 Bread added",
+                        "= [Total Cost (today): 0.80]")
+        );
+    }
+
     private static Stream<Arguments> variousValidAddCommands() {
         return Stream.of(
                 arguments("add 2 Apple", List.of("+ 2 Apple added")),

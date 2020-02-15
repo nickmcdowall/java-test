@@ -2,6 +2,7 @@ package com.nkm;
 
 import com.nkm.config.AppConfig;
 import com.nkm.config.StockConfig;
+import com.nkm.stock.NoSuchStockItemException;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -67,11 +68,19 @@ public class CommandPromptInteface {
     private void processAddCommand(String text) {
         Matcher matcher = ADD_ITEM_PATTERN.matcher(text);
         while (matcher.find()) {
-            int count = Integer.valueOf(matcher.group(1));
-            String itemType = matcher.group(2);
-            app.addBasketItem(count, stockConfig.getItemByKey(itemType));
-            out.println(format("+ %s %s added", count, itemType));
+            try {
+                int count = Integer.valueOf(matcher.group(1));
+                addItemToBasket(matcher, count);
+            } catch (NoSuchStockItemException e) {
+                out.println(String.format("! %s", e.getMessage()));
+            }
         }
+    }
+
+    private void addItemToBasket(Matcher matcher, int count) {
+        String itemType = matcher.group(2);
+        app.addBasketItem(count, stockConfig.getItemByKey(itemType));
+        out.println(format("+ %s %s added", count, itemType));
     }
 
 }
