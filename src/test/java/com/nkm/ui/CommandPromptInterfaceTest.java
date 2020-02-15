@@ -1,16 +1,12 @@
 package com.nkm.ui;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 import static com.nkm.ui.CommandPromptInterface.*;
 import static java.lang.System.lineSeparator;
@@ -18,7 +14,6 @@ import static java.time.Duration.ofMillis;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class CommandPromptInterfaceTest {
 
@@ -31,10 +26,24 @@ class CommandPromptInterfaceTest {
         assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS, GOODBYE));
     }
 
-    @ParameterizedTest
-    @MethodSource("addCommandsAndResponses")
-    void handleAddItemCommand(String addCommands, List<String> expectedOutputLines) {
-        assertOutputResponseWithinTimeout(List.of(addCommands), expectedOutputLines);
+    @Test
+    void handleAddItemCommand() {
+        List<String> inputs = List.of(
+                "add 2 Apple",
+                "add 1 Soup add 1 Soup",
+                "add 1 Bread add 1 Milk",
+                "add 13 Apple add 0 Soup"
+        );
+
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "+ 2 Apple added",
+                "+ 1 Soup added",
+                "+ 1 Soup added",
+                "+ 1 Bread added",
+                "+ 1 Milk added",
+                "+ 13 Apple added",
+                "+ 0 Soup added"
+        ));
     }
 
     @Test
@@ -143,15 +152,6 @@ class CommandPromptInterfaceTest {
             CommandPromptInterface.start(scanner, new PrintStream(outputStream));
             assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(joinedByNewline(expectedOutput));
         });
-    }
-
-    private static Stream<Arguments> addCommandsAndResponses() {
-        return Stream.of(
-                arguments("add 2 Apple", List.of(GREETING, INSTRUCTIONS, "+ 2 Apple added")),
-                arguments("add 1 Soup add 1 Soup", List.of(GREETING, INSTRUCTIONS, "+ 1 Soup added", "+ 1 Soup added")),
-                arguments("add 1 Bread add 1 Milk", List.of(GREETING, INSTRUCTIONS, "+ 1 Bread added", "+ 1 Milk added")),
-                arguments("add 13 Apple add 0 Soup", List.of(GREETING, INSTRUCTIONS, "+ 13 Apple added", "+ 0 Soup added"))
-        );
     }
 
     private String joinedByNewline(List<String> userInput) {
