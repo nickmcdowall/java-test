@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import static com.nkm.ui.CommandPromptInterface.*;
 import static java.lang.System.lineSeparator;
 import static java.time.Duration.ofMillis;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
@@ -27,37 +26,28 @@ class CommandPromptInterfaceTest {
 
     @Test
     void handleExit() {
-        Scanner scanner = new Scanner("exit");
+        List<String> inputs = List.of("exit");
 
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS, GOODBYE)
-        );
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS, GOODBYE));
     }
 
     @ParameterizedTest
-    @MethodSource("variousValidAddCommands")
-    void handleAddItemCommand(String command, List<String> expectedOutputLines) {
-        Scanner scanner = new Scanner(joinedByNewline(command, "exit"));
-
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).contains(joinedByNewline(expectedOutputLines));
+    @MethodSource("addCommandsAndResponses")
+    void handleAddItemCommand(String addCommands, List<String> expectedOutputLines) {
+        assertOutputResponseWithinTimeout(List.of(addCommands), expectedOutputLines);
     }
 
     @Test
     void checkoutWithItem() {
-        Scanner scanner = new Scanner(joinedByNewline("add 1 Bread", "checkout"));
-
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS,
-                        "+ 1 Bread added",
-                        "= [Total Cost (today +0): 0.80]"
-                )
+        List<String> inputs = List.of(
+                "add 1 Bread",
+                "checkout"
         );
+
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "+ 1 Bread added",
+                "= [Total Cost (today +0): 0.80]"
+        ));
     }
 
     @Test
@@ -68,7 +58,7 @@ class CommandPromptInterfaceTest {
                 "checkout"
         );
 
-        assertWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
                 "? unknown command 'asdfsafa'",
                 "+ 1 Bread added",
                 "= [Total Cost (today +0): 0.80]"));
@@ -76,72 +66,63 @@ class CommandPromptInterfaceTest {
 
     @Test
     void handleUnknownStockItems() {
-        Scanner scanner = new Scanner(joinedByNewline(
+        List<String> inputs = List.of(
                 "add 1 Cheese",
                 "add 1 Butter",
                 "add 1 Bread",
                 "checkout"
-        ));
+        );
 
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS,
-                        "! No stock item exists with key: Cheese",
-                        "! No stock item exists with key: Butter",
-                        "+ 1 Bread added",
-                        "= [Total Cost (today +0): 0.80]")
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "! No stock item exists with key: Cheese",
+                "! No stock item exists with key: Butter",
+                "+ 1 Bread added",
+                "= [Total Cost (today +0): 0.80]")
         );
     }
 
     @Test
     void negativeQuantitiesHRejectedGracefully() {
-        Scanner scanner = new Scanner(joinedByNewline("add -1 Bread", "checkout"));
+        List<String> inputs = List.of(
+                "add -1 Bread",
+                "checkout"
+        );
 
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS,
-                        "! negative quantities not supported",
-                        "= [Total Cost (today +0): 0.00]")
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "! negative quantities not supported",
+                "= [Total Cost (today +0): 0.00]")
         );
     }
 
     @Test
     void checkoutOnAFutureDate() {
-        Scanner scanner = new Scanner(joinedByNewline(
+        List<String> inputs = List.of(
                 "add 1 Apple",
                 "checkout today +1",
-                "checkout today +3")
+                "checkout today +3"
         );
 
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS,
-                        "+ 1 Apple added",
-                        "= [Total Cost (today +1): 0.10]",
-                        "= [Total Cost (today +3): 0.09]"
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "+ 1 Apple added",
+                "= [Total Cost (today +1): 0.10]",
+                "= [Total Cost (today +3): 0.09]"
                 )
         );
     }
 
     @Test
     void checkoutOnAPastDate() {
-        Scanner scanner = new Scanner(joinedByNewline(
+        List<String> inputs = List.of(
                 "add 2 Soup add 1 Bread",
                 "checkout today -1",
-                "checkout today -2")
+                "checkout today -2"
         );
 
-        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-
-        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS,
-                        "+ 2 Soup added",
-                        "+ 1 Bread added",
-                        "= [Total Cost (today -1): 1.70]",
-                        "= [Total Cost (today -2): 2.10]"
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "+ 2 Soup added",
+                "+ 1 Bread added",
+                "= [Total Cost (today -1): 1.70]",
+                "= [Total Cost (today -2): 2.10]"
                 )
         );
     }
@@ -150,31 +131,27 @@ class CommandPromptInterfaceTest {
     void showAvailableStockItems() {
         List<String> inputs = List.of("stock", "exit");
 
-        assertWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+        assertOutputResponseWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
                 "stocked items: [Apple, Bread, Milk, Soup]",
                 "Bye"
         ));
     }
 
-    private void assertWithinTimeout(List<String> inputs, List<String> expectedOutput) {
+    private void assertOutputResponseWithinTimeout(List<String> inputs, List<String> expectedOutput) {
         Scanner scanner = new Scanner(joinedByNewline(inputs));
-        assertTimeoutPreemptively(ofMillis(100), () -> {
+        assertTimeoutPreemptively(ofMillis(500), () -> {
             CommandPromptInterface.start(scanner, new PrintStream(outputStream));
             assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(joinedByNewline(expectedOutput));
         });
     }
 
-    private static Stream<Arguments> variousValidAddCommands() {
+    private static Stream<Arguments> addCommandsAndResponses() {
         return Stream.of(
-                arguments("add 2 Apple", List.of("+ 2 Apple added")),
-                arguments("add 1 Soup add 1 Soup", List.of("+ 1 Soup added", "+ 1 Soup added")),
-                arguments("add 1 Bread add 1 Milk", List.of("+ 1 Bread added", "+ 1 Milk added")),
-                arguments("add 13 Apple add 0 Soup", List.of("+ 13 Apple added", "+ 0 Soup added"))
+                arguments("add 2 Apple", List.of(GREETING, INSTRUCTIONS, "+ 2 Apple added")),
+                arguments("add 1 Soup add 1 Soup", List.of(GREETING, INSTRUCTIONS, "+ 1 Soup added", "+ 1 Soup added")),
+                arguments("add 1 Bread add 1 Milk", List.of(GREETING, INSTRUCTIONS, "+ 1 Bread added", "+ 1 Milk added")),
+                arguments("add 13 Apple add 0 Soup", List.of(GREETING, INSTRUCTIONS, "+ 13 Apple added", "+ 0 Soup added"))
         );
-    }
-
-    private String joinedByNewline(String... userInput) {
-        return joinedByNewline(asList(userInput));
     }
 
     private String joinedByNewline(List<String> userInput) {
