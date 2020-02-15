@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class FixedPercentageItemDiscountTest {
+class FixedPercentageDiscountTest {
 
     private final Item apple = new StockItem("Apple", 100);
-    private final Item Milk = new StockItem("Milk", 5);
-    private final Discount percentageDiscount = new FixedPercentageItemDiscount("Apple", 0.1);
+    private final Item milk = new StockItem("Milk", 5);
+    private final Discount percentageDiscount = new FixedPercentageDiscount("Apple", 0.1);
     private final Basket basket = new Basket();
 
     @Test
@@ -21,7 +21,7 @@ class FixedPercentageItemDiscountTest {
 
     @Test
     void discountForSingleEligibleItemInBasketWithOtherItems() {
-        assertThat(percentageDiscount.apply(basket.add(1, apple).add(1, Milk))).isEqualTo(10);
+        assertThat(percentageDiscount.apply(basket.add(1, apple).add(1, milk))).isEqualTo(10);
     }
 
     @Test
@@ -36,6 +36,6 @@ class FixedPercentageItemDiscountTest {
 
     @Test
     void noDiscountForNoMatchingItemsInBasket() {
-        assertThat(percentageDiscount.apply(basket.add(1, Milk))).isEqualTo(0);
+        assertThat(percentageDiscount.apply(basket.add(1, milk))).isEqualTo(0);
     }
 }

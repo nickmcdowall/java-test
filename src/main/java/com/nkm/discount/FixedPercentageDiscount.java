@@ -3,12 +3,12 @@ package com.nkm.discount;
 import com.nkm.stock.Basket;
 import com.nkm.stock.Item;
 
-public class FixedPercentageItemDiscount implements Discount {
+public class FixedPercentageDiscount implements Discount {
 
     private String itemKey;
     private double percentageDiscount;
 
-    public FixedPercentageItemDiscount(String itemKey, double percentageDiscount) {
+    public FixedPercentageDiscount(String itemKey, double percentageDiscount) {
         this.itemKey = itemKey;
         this.percentageDiscount = percentageDiscount;
     }
