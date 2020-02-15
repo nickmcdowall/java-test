@@ -1,6 +1,6 @@
 package com.nkm.discount;
 
-import com.nkm.Basket;
+import com.nkm.stock.Basket;
 import com.nkm.stock.Item;
 
 public class FixedPercentageItemDiscount implements Discount {

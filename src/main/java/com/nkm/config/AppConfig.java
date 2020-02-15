@@ -1,7 +1,7 @@
 package com.nkm.config;
 
 import com.nkm.Application;
-import com.nkm.PricingService;
+import com.nkm.pricing.PricingService;
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.FixedPercentageItemDiscount;
 import com.nkm.discount.MultiBuyGetItemDiscount;

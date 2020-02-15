@@ -1,8 +1,6 @@
 package com.nkm.discount;
 
-import com.nkm.Basket;
-
-import java.time.LocalDate;
+import com.nkm.stock.Basket;
 
 public interface Discount {
 

@@ -1,6 +1,6 @@
 package com.nkm.discount;
 
-import com.nkm.Basket;
+import com.nkm.stock.Basket;
 import com.nkm.stock.Bread;
 import com.nkm.stock.Soup;
 import org.assertj.core.data.Offset;

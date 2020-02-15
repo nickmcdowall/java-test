@@ -1,5 +1,7 @@
-package com.nkm;
+package com.nkm.ui;
 
+import com.nkm.Application;
+import com.nkm.NegativeQuantitiesNotSupportedException;
 import com.nkm.config.AppConfig;
 import com.nkm.config.StockConfig;
 import com.nkm.stock.NoSuchStockItemException;

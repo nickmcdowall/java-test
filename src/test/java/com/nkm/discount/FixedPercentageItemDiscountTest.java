@@ -1,6 +1,6 @@
 package com.nkm.discount;
 
-import com.nkm.Basket;
+import com.nkm.stock.Basket;
 import com.nkm.stock.Apple;
 import com.nkm.stock.Milk;
 import com.nkm.stock.Item;

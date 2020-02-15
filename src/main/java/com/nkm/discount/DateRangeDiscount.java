@@ -1,6 +1,6 @@
 package com.nkm.discount;
 
-import com.nkm.Basket;
+import com.nkm.stock.Basket;
 
 import java.time.LocalDate;
 import java.time.Period;

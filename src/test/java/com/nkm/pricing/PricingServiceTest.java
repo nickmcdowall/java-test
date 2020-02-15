@@ -1,7 +1,9 @@
-package com.nkm;
+package com.nkm.pricing;
 
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.Discount;
+import com.nkm.pricing.PricingService;
+import com.nkm.stock.Basket;
 import com.nkm.stock.Bread;
 import com.nkm.stock.Soup;
 import org.assertj.core.data.Offset;

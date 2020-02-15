@@ -1,5 +1,7 @@
 package com.nkm;
 
+import com.nkm.pricing.PricingService;
+import com.nkm.stock.Basket;
 import com.nkm.stock.Item;
 
 import java.time.LocalDate;

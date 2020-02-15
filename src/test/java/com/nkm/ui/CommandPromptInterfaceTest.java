@@ -1,5 +1,6 @@
-package com.nkm;
+package com.nkm.ui;
 
+import com.nkm.ui.CommandPromptInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-import static com.nkm.CommandPromptInterface.*;
+import static com.nkm.ui.CommandPromptInterface.*;
 import static java.lang.System.lineSeparator;
 import static java.time.Duration.ofMillis;
 import static java.util.Arrays.asList;

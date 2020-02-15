@@ -1,6 +1,4 @@
-package com.nkm;
-
-import com.nkm.stock.Item;
+package com.nkm.stock;
 
 import java.util.ArrayList;
 import java.util.List;

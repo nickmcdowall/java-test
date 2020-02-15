@@ -1,5 +1,6 @@
-package com.nkm;
+package com.nkm.pricing;
 
+import com.nkm.stock.Basket;
 import com.nkm.discount.DateSensitive;
 import com.nkm.discount.Discount;
 
