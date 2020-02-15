@@ -1,13 +1,10 @@
 package com.nkm.config;
 
 import com.nkm.Application;
-import com.nkm.pricing.PricingService;
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.FixedPercentageItemDiscount;
 import com.nkm.discount.MultiBuyGetItemDiscount;
-import com.nkm.stock.Apple;
-import com.nkm.stock.Bread;
-import com.nkm.stock.Soup;
+import com.nkm.pricing.PricingService;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -19,8 +16,8 @@ public class AppConfig {
     private final LocalDate threeDaysHence = now().plusDays(3);
     private final LocalDate yesterday = now().minusDays(1);
     private final Period untilEndOfFollowingMonth = Period.between(threeDaysHence, lastDayOfMonth(now().plusMonths(1)));
-    private final FixedPercentageItemDiscount tenPercentOffApplesOffer = new FixedPercentageItemDiscount(Apple.class, 0.1);
-    private final MultiBuyGetItemDiscount SoupMultiBuyOffer = new MultiBuyGetItemDiscount(2, Soup.class, 0.5, Bread.class);
+    private final FixedPercentageItemDiscount tenPercentOffApplesOffer = new FixedPercentageItemDiscount("Apple", 0.1);
+    private final MultiBuyGetItemDiscount SoupMultiBuyOffer = new MultiBuyGetItemDiscount(2, "Soup", 0.5, "Bread");
 
     public Application getApplication() {
         return new Application(

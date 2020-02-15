@@ -1,8 +1,7 @@
 package com.nkm.discount;
 
 import com.nkm.stock.Basket;
-import com.nkm.stock.Bread;
-import com.nkm.stock.Soup;
+import com.nkm.stock.StockItem;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MultiBuyGetItemDiscountTest {
 
-    private final MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, Bread.class, 0.5, Soup.class);
+    private final MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, "Bread", 0.5, "Soup");
 
     @ParameterizedTest(name = "{0} loaves, {1} soups with total discount: {2}")
     @CsvSource({
@@ -28,8 +27,8 @@ class MultiBuyGetItemDiscountTest {
     })
     void discountOnEligibleBasket(int noOfLoaves, int noOfSoups, double expectedDiscount) {
         Double discountCalculated = discount.apply(new Basket()
-                .add(noOfLoaves, new Bread(5))
-                .add(noOfSoups, new Soup(100))
+                .add(noOfLoaves, new StockItem("Bread", 5.00))
+                .add(noOfSoups, new StockItem("Soup", 100.00))
         );
 
         assertThat(discountCalculated).isEqualTo(expectedDiscount, Offset.offset(0.001));

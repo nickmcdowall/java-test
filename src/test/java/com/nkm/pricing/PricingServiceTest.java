@@ -2,10 +2,9 @@ package com.nkm.pricing;
 
 import com.nkm.discount.DateRangeDiscount;
 import com.nkm.discount.Discount;
-import com.nkm.pricing.PricingService;
 import com.nkm.stock.Basket;
-import com.nkm.stock.Bread;
-import com.nkm.stock.Soup;
+import com.nkm.stock.Item;
+import com.nkm.stock.StockItem;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,8 +21,8 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class PricingServiceTest {
 
-    private static final Soup SOUP = new Soup(0.65);
-    private static final Bread BREAD = new Bread(0.80);
+    private static final Item SOUP = new StockItem("Soup", 0.65);
+    private static final Item BREAD = new StockItem("Bread", 0.80);
     private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
     private PricingService pricingService;

@@ -5,17 +5,17 @@ import com.nkm.stock.Item;
 
 public class FixedPercentageItemDiscount implements Discount {
 
-    private Class<? extends Item> itemClass;
+    private String itemKey;
     private double percentageDiscount;
 
-    public FixedPercentageItemDiscount(Class<? extends Item> itemClass, double percentageDiscount) {
-        this.itemClass = itemClass;
+    public FixedPercentageItemDiscount(String itemKey, double percentageDiscount) {
+        this.itemKey = itemKey;
         this.percentageDiscount = percentageDiscount;
     }
 
     @Override
     public double apply(Basket basket) {
-        return basket.itemsOfType(itemClass).stream()
+        return basket.itemsWithKey(itemKey).stream()
                 .mapToDouble(Item::getPrice)
                 .sum() * percentageDiscount;
     }

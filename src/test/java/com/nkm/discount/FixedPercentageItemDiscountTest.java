@@ -1,18 +1,17 @@
 package com.nkm.discount;
 
 import com.nkm.stock.Basket;
-import com.nkm.stock.Apple;
-import com.nkm.stock.Milk;
 import com.nkm.stock.Item;
+import com.nkm.stock.StockItem;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FixedPercentageItemDiscountTest {
 
-    private final Item apple = new Apple(100);
-    private final Item Milk = new Milk(5);
-    private final Discount percentageDiscount = new FixedPercentageItemDiscount(Apple.class, 0.1);
+    private final Item apple = new StockItem("Apple", 100);
+    private final Item Milk = new StockItem("Milk", 5);
+    private final Discount percentageDiscount = new FixedPercentageItemDiscount("Apple", 0.1);
     private final Basket basket = new Basket();
 
     @Test

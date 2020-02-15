@@ -21,9 +21,9 @@ public class Basket {
                 .sum();
     }
 
-    public List<Item> itemsOfType(Class<? extends Item> itemClass) {
+    public List<Item> itemsWithKey(String itemKey) {
         return items.stream()
-                .filter(item -> item.getClass().equals(itemClass))
+                .filter(item -> item.getKey().equals(itemKey))
                 .collect(toList());
     }
 }

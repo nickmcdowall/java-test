@@ -8,22 +8,22 @@ import java.util.List;
 public class MultiBuyGetItemDiscount implements Discount {
 
     private final int requiredItemCount;
-    private final Class<? extends Item> multiItemClass;
+    private final String multiItemKey;
     private final double percentageDiscount;
-    private final Class<? extends Item> discountItemClass;
+    private final String discountItemKey;
 
-    public MultiBuyGetItemDiscount(int requiredItemCount, Class<? extends Item> multiItemClass, double percentageDiscount, Class<? extends Item> discountItemClass) {
+    public MultiBuyGetItemDiscount(int requiredItemCount, String multiItemKey, double percentageDiscount, String discountItemKey) {
         this.requiredItemCount = requiredItemCount;
-        this.multiItemClass = multiItemClass;
+        this.multiItemKey = multiItemKey;
         this.percentageDiscount = percentageDiscount;
-        this.discountItemClass = discountItemClass;
+        this.discountItemKey = discountItemKey;
     }
 
     @Override
     public double apply(Basket basket) {
-        List<Item> multiItems = basket.itemsOfType(multiItemClass);
+        List<Item> multiItems = basket.itemsWithKey(multiItemKey);
         int maxTimesDiscountCanBeApplied = multiItems.size() / requiredItemCount;
-        List<Item> targetItems = basket.itemsOfType(discountItemClass);
+        List<Item> targetItems = basket.itemsWithKey(discountItemKey);
 
         return targetItems.stream()
                 .limit(maxTimesDiscountCanBeApplied)
