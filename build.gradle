@@ -1,5 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
+}
+
+application {
+    mainClassName = 'com.nkm.ui.CommandPromptInterface'
+}
+
+run {
+    standardInput = System.in
 }
 
 compileJava {
