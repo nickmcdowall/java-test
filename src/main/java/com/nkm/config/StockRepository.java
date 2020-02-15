@@ -11,7 +11,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
-public class StockConfig {
+public class StockRepository {
 
     private final Map<String, Item> stockItems = List.of(
             new StockItem("Apple", 0.10),

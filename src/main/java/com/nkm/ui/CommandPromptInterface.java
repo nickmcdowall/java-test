@@ -2,8 +2,8 @@ package com.nkm.ui;
 
 import com.nkm.Application;
 import com.nkm.NegativeQuantitiesNotSupportedException;
-import com.nkm.config.AppConfig;
-import com.nkm.config.StockConfig;
+import com.nkm.config.ApplicationConfig;
+import com.nkm.config.StockRepository;
 import com.nkm.stock.NoSuchStockItemException;
 
 import java.io.PrintStream;
@@ -21,14 +21,15 @@ import static java.util.regex.Pattern.compile;
 
 public class CommandPromptInterface {
 
-    public static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
-    private static final Pattern CHECKOOUT_PATTERN = compile("checkout( today ([+-][0-9]+))?");
     public static final String GREETING = "~~ Welcome to Henry’s Grocery! Use the following commands to purchase items. ~~";
     public static final String GOODBYE = "Bye";
     public static final String INSTRUCTIONS =
             " ~ Type 'add <x> <ItemType>' to add x number of items to the basket. e.g. 'add 1 Milk'\n" +
                     " ~ Type 'exit' to quit to application.\n" +
                     " ~ Type 'checkout' or 'checkout today [+/-]<x>' to get the total cost for a relative day. e.g. 'checkout today +5'\n";
+
+    private static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
+    private static final Pattern CHECKOOUT_PATTERN = compile("checkout( today ([+-][0-9]+))?");
 
     public static void main(String[] args) {
         start(new Scanner(System.in), System.out);
@@ -40,9 +41,9 @@ public class CommandPromptInterface {
 
     private final Scanner scanner;
     private final PrintStream out;
-    private final AppConfig appConfig = new AppConfig();
-    private final StockConfig stockConfig = new StockConfig();
-    private Application app = appConfig.getApplication();
+    private final ApplicationConfig applicationConfig = new ApplicationConfig();
+    private final StockRepository stockRepository = new StockRepository();
+    private Application app = applicationConfig.getApplication();
 
     private CommandPromptInterface(Scanner scanner, PrintStream out) {
         this.scanner = scanner;
@@ -95,7 +96,7 @@ public class CommandPromptInterface {
 
     private void addItemToBasket(Matcher matcher, int count) {
         String itemType = matcher.group(2);
-        app.addBasketItem(count, stockConfig.getItemByKey(itemType));
+        app.addBasketItem(count, stockRepository.getItemByKey(itemType));
         out.println(format("+ %s %s added", count, itemType));
     }
 

@@ -11,7 +11,7 @@ import java.time.Period;
 
 import static java.time.LocalDate.now;
 
-public class AppConfig {
+public class ApplicationConfig {
 
     private final LocalDate threeDaysHence = now().plusDays(3);
     private final LocalDate yesterday = now().minusDays(1);

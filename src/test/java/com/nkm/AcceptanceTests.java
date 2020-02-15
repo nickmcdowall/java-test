@@ -1,7 +1,7 @@
 package com.nkm;
 
-import com.nkm.config.AppConfig;
-import com.nkm.config.StockConfig;
+import com.nkm.config.ApplicationConfig;
+import com.nkm.config.StockRepository;
 import com.nkm.stock.Item;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
@@ -18,19 +18,18 @@ public class AcceptanceTests {
 
     private static final Offset<Double> ACCEPTABLE_OFFSET = Offset.offset(0.001);
 
-    private final StockConfig stockConfig = new StockConfig();
-    private final AppConfig appConfig = new AppConfig();
-    private final Application application = appConfig.getApplication();
-    private final Item Soup = stockConfig.getItemByKey("Soup");
-    private final Item Bread = stockConfig.getItemByKey("Bread");
-    private final Item apple = stockConfig.getItemByKey("Apple");
-    private final Item Milk = stockConfig.getItemByKey("Milk");
+    private final Application application = new ApplicationConfig().getApplication();
+    private final StockRepository stockRepository = new StockRepository();
+    private final Item soup = stockRepository.getItemByKey("Soup");
+    private final Item bread = stockRepository.getItemByKey("Bread");
+    private final Item apple = stockRepository.getItemByKey("Apple");
+    private final Item milk = stockRepository.getItemByKey("Milk");
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, +1, +2, +3, +4, +5})
     void multiSoupOfferWhenBoughtInDiscountWindow(int offsetPurchaseDate) {
-        application.addBasketItem(3, Soup);
-        application.addBasketItem(2, Bread);
+        application.addBasketItem(3, soup);
+        application.addBasketItem(2, bread);
 
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.15, ACCEPTABLE_OFFSET);
     }
@@ -38,8 +37,8 @@ public class AcceptanceTests {
     @ParameterizedTest
     @ValueSource(ints = {-2, +6})
     void multiSoupOfferNotAppliedWhenBoughtOutsideDiscountWindow(int offsetPurchaseDate) {
-        application.addBasketItem(3, Soup);
-        application.addBasketItem(2, Bread);
+        application.addBasketItem(3, soup);
+        application.addBasketItem(2, bread);
 
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
     }
@@ -48,7 +47,7 @@ public class AcceptanceTests {
     @ValueSource(ints = {0, +1, +2})
     void appleDiscountNotAppliedWhenBoughtBeforeDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(6, apple);
-        application.addBasketItem(1, Milk);
+        application.addBasketItem(1, milk);
 
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
@@ -57,7 +56,7 @@ public class AcceptanceTests {
     @ValueSource(ints = {+3, +5, +20})
     void appleDiscountIsAppliedDuringDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(6, apple);
-        application.addBasketItem(1, Milk);
+        application.addBasketItem(1, milk);
 
         assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
     }
@@ -65,7 +64,7 @@ public class AcceptanceTests {
     @Test
     void appleDiscountIsAppliedOnLastDayNextMonth() {
         application.addBasketItem(6, apple);
-        application.addBasketItem(1, Milk);
+        application.addBasketItem(1, milk);
 
         assertThat(application.priceUp(lastDayOfMonth(nextMonth()))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
     }
@@ -73,7 +72,7 @@ public class AcceptanceTests {
     @Test
     void appleDiscountIsNotAppliedAfterLastDayNextMonth() {
         application.addBasketItem(6, apple);
-        application.addBasketItem(1, Milk);
+        application.addBasketItem(1, milk);
 
         assertThat(application.priceUp(lastDayOfMonth(nextMonth()).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
     }
@@ -81,8 +80,8 @@ public class AcceptanceTests {
     @Test
     void multiDiscountsApplied() {
         application.addBasketItem(3, apple);
-        application.addBasketItem(2, Soup);
-        application.addBasketItem(1, Bread);
+        application.addBasketItem(2, soup);
+        application.addBasketItem(1, bread);
 
         assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_OFFSET);
     }
