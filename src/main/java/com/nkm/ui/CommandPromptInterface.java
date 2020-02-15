@@ -43,7 +43,7 @@ public class CommandPromptInterface {
     private final PrintStream out;
     private final ApplicationConfig applicationConfig = new ApplicationConfig();
     private final StockRepository stockRepository = new StockRepository();
-    private Application app = applicationConfig.getApplication();
+    private final Application app = applicationConfig.getApplication();
 
     private CommandPromptInterface(Scanner scanner, PrintStream out) {
         this.scanner = scanner;
