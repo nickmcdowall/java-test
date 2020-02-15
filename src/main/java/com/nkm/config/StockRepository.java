@@ -6,6 +6,8 @@ import com.nkm.stock.StockItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
@@ -24,5 +26,9 @@ public class StockRepository {
     public Item getItemByKey(String key) {
         return ofNullable(stockItems.get(key))
                 .orElseThrow(() -> new NoSuchStockItemException(key));
+    }
+
+    public Set<String> keys() {
+        return new TreeSet(stockItems.keySet());
     }
 }

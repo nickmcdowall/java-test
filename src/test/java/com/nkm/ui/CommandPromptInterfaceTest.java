@@ -1,6 +1,5 @@
 package com.nkm.ui;
 
-import com.nkm.ui.CommandPromptInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -63,22 +62,16 @@ class CommandPromptInterfaceTest {
 
     @Test
     void doesNotHangWithUnknownCommands() {
-        Scanner scanner = new Scanner(joinedByNewline(
+        List<String> inputs = List.of(
                 "asdfsafa",
                 "add 1 Bread",
                 "checkout"
-        ));
-
-        assertTimeoutPreemptively(ofMillis(100), () -> {
-                    CommandPromptInterface.start(scanner, new PrintStream(outputStream));
-                    assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                            joinedByNewline(GREETING, INSTRUCTIONS,
-                                    "? unknown command 'asdfsafa'",
-                                    "+ 1 Bread added",
-                                    "= [Total Cost (today +0): 0.80]")
-                    );
-                }
         );
+
+        assertWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "? unknown command 'asdfsafa'",
+                "+ 1 Bread added",
+                "= [Total Cost (today +0): 0.80]"));
     }
 
     @Test
@@ -151,6 +144,24 @@ class CommandPromptInterfaceTest {
                         "= [Total Cost (today -2): 2.10]"
                 )
         );
+    }
+
+    @Test
+    void showAvailableStockItems() {
+        List<String> inputs = List.of("stock", "exit");
+
+        assertWithinTimeout(inputs, List.of(GREETING, INSTRUCTIONS,
+                "stocked items: [Apple, Bread, Milk, Soup]",
+                "Bye"
+        ));
+    }
+
+    private void assertWithinTimeout(List<String> inputs, List<String> expectedOutput) {
+        Scanner scanner = new Scanner(joinedByNewline(inputs));
+        assertTimeoutPreemptively(ofMillis(100), () -> {
+            CommandPromptInterface.start(scanner, new PrintStream(outputStream));
+            assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(joinedByNewline(expectedOutput));
+        });
     }
 
     private static Stream<Arguments> variousValidAddCommands() {

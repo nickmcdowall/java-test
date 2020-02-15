@@ -26,6 +26,7 @@ public class CommandPromptInterface {
     public static final String INSTRUCTIONS =
             " ~ Type 'add <x> <ItemType>' to add x number of items to the basket. e.g. 'add 1 Milk'\n" +
                     " ~ Type 'exit' to quit to application.\n" +
+                    " ~ Type 'stock' to list available stock options.\n" +
                     " ~ Type 'checkout' or 'checkout today [+/-]<x>' to get the total cost for a relative day. e.g. 'checkout today +5'\n";
 
     private static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
@@ -58,6 +59,11 @@ public class CommandPromptInterface {
             if (scanner.hasNext("exit")) {
                 out.println(GOODBYE);
                 return;
+            }
+            if (scanner.hasNext("stock")) {
+                out.println(format("stocked items: %s", stockRepository.keys()));
+                scanner.nextLine();
+                continue;
             }
             if (scanner.hasNext("add")) {
                 processAddCommand(scanner.nextLine());
