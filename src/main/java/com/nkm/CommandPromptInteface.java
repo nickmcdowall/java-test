@@ -9,13 +9,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.util.regex.Pattern.compile;
 
 public class CommandPromptInteface {
 
-    public static final Pattern ADD_ITEM_PATTERN = compile("add ([0-9]+) ([A-Za-z]+)");
+    public static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
     public static final String GREETING = "Welcome to Henry’s Grocery! Use the following commands to purchase items.";
     public static final String GOODBYE = "Bye";
     public static final String INSTRUCTIONS =
@@ -61,7 +62,7 @@ public class CommandPromptInteface {
                 continue;
             }
             String unknown = scanner.nextLine();
-            out.println(String.format("? unknown command '%s'", unknown));
+            out.println(format("? unknown command '%s'", unknown));
         }
     }
 
@@ -69,10 +70,11 @@ public class CommandPromptInteface {
         Matcher matcher = ADD_ITEM_PATTERN.matcher(text);
         while (matcher.find()) {
             try {
-                int count = Integer.valueOf(matcher.group(1));
-                addItemToBasket(matcher, count);
+                addItemToBasket(matcher, parseInt(matcher.group(1)));
             } catch (NoSuchStockItemException e) {
-                out.println(String.format("! %s", e.getMessage()));
+                out.println(format("! %s", e.getMessage()));
+            } catch (NegativeQuantitiesNotSupportedException e) {
+                out.println("! negative quantities not supported");
             }
         }
     }

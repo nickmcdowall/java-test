@@ -88,6 +88,19 @@ class CommandPromptIntefaceTest {
         );
     }
 
+    @Test
+    void negativeQuantitiesHRejectedGracefully() {
+        Scanner scanner = new Scanner(joinedByNewline("add -1 Bread", "checkout"));
+
+        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                joinedByNewline(GREETING, INSTRUCTIONS,
+                        "! negative quantities not supported",
+                        "= [Total Cost (today): 0.00]")
+        );
+    }
+
     private static Stream<Arguments> variousValidAddCommands() {
         return Stream.of(
                 arguments("add 2 Apple", List.of("+ 2 Apple added")),

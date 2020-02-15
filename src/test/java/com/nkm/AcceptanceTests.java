@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AcceptanceTests {
 
@@ -84,6 +85,13 @@ public class AcceptanceTests {
         application.addBasketItem(1, Bread);
 
         assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_OFFSET);
+    }
+
+    @Test
+    void rejectNegativeQuantitiesWhenAddingToBasket() {
+        assertThrows(NegativeQuantitiesNotSupportedException.class, () ->
+                application.addBasketItem(-1, apple)
+        );
     }
 
     private LocalDate nextMonth() {

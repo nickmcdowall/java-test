@@ -14,6 +14,8 @@ public class Application {
     }
 
     public void addBasketItem(int count, Item item) {
+        if (0 > count)
+            throw new NegativeQuantitiesNotSupportedException();
         basket.add(count, item);
     }
 
