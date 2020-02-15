@@ -17,17 +17,17 @@ class FixedPercentageItemDiscountTest {
 
     @Test
     void discountForSingleEligibleItemInBasket() {
-        assertThat(percentageDiscount.apply(basket.with(1, apple))).isEqualTo(10);
+        assertThat(percentageDiscount.apply(basket.add(1, apple))).isEqualTo(10);
     }
 
     @Test
     void discountForSingleEligibleItemInBasketWithOtherItems() {
-        assertThat(percentageDiscount.apply(basket.with(1, apple).with(1, Milk))).isEqualTo(10);
+        assertThat(percentageDiscount.apply(basket.add(1, apple).add(1, Milk))).isEqualTo(10);
     }
 
     @Test
     void discountForMultiEligibleItemsInBasket() {
-        assertThat(percentageDiscount.apply(basket.with(2, apple))).isEqualTo(20);
+        assertThat(percentageDiscount.apply(basket.add(2, apple))).isEqualTo(20);
     }
 
     @Test
@@ -37,6 +37,6 @@ class FixedPercentageItemDiscountTest {
 
     @Test
     void noDiscountForNoMatchingItemsInBasket() {
-        assertThat(percentageDiscount.apply(basket.with(1, Milk))).isEqualTo(0);
+        assertThat(percentageDiscount.apply(basket.add(1, Milk))).isEqualTo(0);
     }
 }

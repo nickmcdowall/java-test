@@ -34,7 +34,7 @@ public class PricingServiceTest {
         pricingService = new PricingService(
                 new DateRangeDiscount(today(), aFixedDiscountOf(expectedDiscount)));
 
-        Basket basket = new Basket().with(1, BREAD);
+        Basket basket = new Basket().add(1, BREAD);
 
         assertThat(pricingService.price(basket, today()))
                 .isEqualTo(basket.totalCost() - expectedDiscount, OFFSET);
@@ -48,7 +48,7 @@ public class PricingServiceTest {
         pricingService = new PricingService(
                 new DateRangeDiscount(today(), aFixedDiscountOf(0.4)));
 
-        Basket basket = new Basket().with(5, BREAD);
+        Basket basket = new Basket().add(5, BREAD);
 
         assertThat(pricingService.price(basket, now().plusDays(paymentDayOffset)))
                 .isEqualTo(basket.totalCost(), OFFSET);
@@ -66,7 +66,7 @@ public class PricingServiceTest {
     void preventScenarioWherePriceIsNegative() {
         pricingService = new PricingService(aFixedDiscountOf(5.00));
 
-        Basket basket = new Basket().with(1, BREAD);
+        Basket basket = new Basket().add(1, BREAD);
 
         assertThat(pricingService.price(basket, now())).isGreaterThanOrEqualTo(0.0);
     }
@@ -78,9 +78,9 @@ public class PricingServiceTest {
     private static Stream<Arguments> variousBaskets() {
         return Stream.of(
                 arguments(new Basket()),
-                arguments(new Basket().with(1, BREAD)),
-                arguments(new Basket().with(1, SOUP)),
-                arguments(new Basket().with(3, SOUP).with(2, BREAD))
+                arguments(new Basket().add(1, BREAD)),
+                arguments(new Basket().add(1, SOUP)),
+                arguments(new Basket().add(3, SOUP).add(2, BREAD))
         );
     }
 

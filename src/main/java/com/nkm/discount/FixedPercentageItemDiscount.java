@@ -15,7 +15,7 @@ public class FixedPercentageItemDiscount implements Discount {
 
     @Override
     public double apply(Basket basket) {
-        return basket.filterByType(itemClass).stream()
+        return basket.itemsOfType(itemClass).stream()
                 .mapToDouble(Item::getPrice)
                 .sum() * percentageDiscount;
     }

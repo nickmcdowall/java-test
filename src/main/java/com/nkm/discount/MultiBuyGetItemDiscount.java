@@ -21,9 +21,9 @@ public class MultiBuyGetItemDiscount implements Discount {
 
     @Override
     public double apply(Basket basket) {
-        List<Item> multiItems = basket.filterByType(multiItemClass);
+        List<Item> multiItems = basket.itemsOfType(multiItemClass);
         int maxTimesDiscountCanBeApplied = multiItems.size() / requiredItemCount;
-        List<Item> targetItems = basket.filterByType(discountItemClass);
+        List<Item> targetItems = basket.itemsOfType(discountItemClass);
 
         return targetItems.stream()
                 .limit(maxTimesDiscountCanBeApplied)

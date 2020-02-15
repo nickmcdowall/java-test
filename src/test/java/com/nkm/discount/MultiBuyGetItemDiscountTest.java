@@ -28,8 +28,8 @@ class MultiBuyGetItemDiscountTest {
     })
     void discountOnEligibleBasket(int noOfLoaves, int noOfSoups, double expectedDiscount) {
         Double discountCalculated = discount.apply(new Basket()
-                .with(noOfLoaves, new Bread(5))
-                .with(noOfSoups, new Soup(100))
+                .add(noOfLoaves, new Bread(5))
+                .add(noOfSoups, new Soup(100))
         );
 
         assertThat(discountCalculated).isEqualTo(expectedDiscount, Offset.offset(0.001));
