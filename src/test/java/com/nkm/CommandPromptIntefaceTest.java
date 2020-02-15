@@ -14,9 +14,11 @@ import java.util.stream.Stream;
 
 import static com.nkm.CommandPromptInteface.*;
 import static java.lang.System.lineSeparator;
+import static java.time.Duration.ofMillis;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class CommandPromptIntefaceTest {
@@ -52,6 +54,22 @@ class CommandPromptIntefaceTest {
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
+        );
+    }
+
+    @Test
+    void doesNotHangWithUnknownCommands() {
+        Scanner scanner = new Scanner(joinedByNewline("asdfsafa", "add 1 Bread", "checkout"));
+
+        assertTimeoutPreemptively(ofMillis(100), () -> {
+                    CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+                    assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                            joinedByNewline(GREETING, INSTRUCTIONS,
+                                    "? unknown command 'asdfsafa'",
+                                    "+ 1 Bread added",
+                                    "= [Total Cost (today): 0.80]")
+                    );
+                }
         );
     }
 
