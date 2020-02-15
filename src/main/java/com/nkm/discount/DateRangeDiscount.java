@@ -3,7 +3,6 @@ package com.nkm.discount;
 import com.nkm.stock.Basket;
 
 import java.time.LocalDate;
-import java.time.Period;
 
 public class DateRangeDiscount implements Discount, DateSensitive {
 
@@ -11,14 +10,14 @@ public class DateRangeDiscount implements Discount, DateSensitive {
     private final LocalDate endDate;
     private final Discount delegate;
 
-    public DateRangeDiscount(LocalDate startDate, Period validPeriod, Discount delegate) {
+    public DateRangeDiscount(LocalDate startDate, LocalDate endDate, Discount delegate) {
         this.startDate = startDate;
-        this.endDate = startDate.plus(validPeriod);
+        this.endDate = endDate;
         this.delegate = delegate;
     }
 
     public DateRangeDiscount(LocalDate startDate, Discount delegate) {
-        this(startDate, Period.ofDays(0), delegate);
+        this(startDate, startDate, delegate);
     }
 
     @Override

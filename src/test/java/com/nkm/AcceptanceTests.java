@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.LocalDate;
-
+import static com.nkm.convenience.DescriptiveRelativeDates.lastDayOfMonth;
+import static com.nkm.convenience.DescriptiveRelativeDates.nextMonth;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,7 +35,7 @@ public class AcceptanceTests {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-2, +6})
+    @ValueSource(ints = {-2, +7})
     void multiSoupOfferNotAppliedWhenBoughtOutsideDiscountWindow(int offsetPurchaseDate) {
         application.addBasketItem(3, soup);
         application.addBasketItem(2, bread);
@@ -93,13 +93,6 @@ public class AcceptanceTests {
         );
     }
 
-    private LocalDate nextMonth() {
-        return now().plusMonths(1);
-    }
 
-    private LocalDate lastDayOfMonth(LocalDate date) {
-        int lengthOfMonth = date.getMonth().length(date.isLeapYear());
-        return date.withDayOfMonth(lengthOfMonth);
-    }
 
 }
