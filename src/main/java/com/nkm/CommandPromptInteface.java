@@ -17,12 +17,12 @@ import static java.util.regex.Pattern.compile;
 public class CommandPromptInteface {
 
     public static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
-    public static final String GREETING = "Welcome to Henry’s Grocery! Use the following commands to purchase items.";
+    public static final String GREETING = "~~ Welcome to Henry’s Grocery! Use the following commands to purchase items. ~~";
     public static final String GOODBYE = "Bye";
     public static final String INSTRUCTIONS =
-            " - Type 'add <x> <ItemType>' to add x number of items to the basket.\n" +
-                    " - Type 'exit' to quit to application.\n" +
-                    " - Type 'checkout' to get the final price.";
+            " ~ Type 'add <x> <ItemType>' to add x number of items to the basket.\n" +
+                    " ~ Type 'exit' to quit to application.\n" +
+                    " ~ Type 'checkout' to get the final price.";
 
     public static void main(String[] args) {
         start(new Scanner(System.in), System.out);
