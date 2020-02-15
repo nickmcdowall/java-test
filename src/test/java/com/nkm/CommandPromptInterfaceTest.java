@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-import static com.nkm.CommandPromptInteface.*;
+import static com.nkm.CommandPromptInterface.*;
 import static java.lang.System.lineSeparator;
 import static java.time.Duration.ofMillis;
 import static java.util.Arrays.asList;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class CommandPromptIntefaceTest {
+class CommandPromptInterfaceTest {
 
     private OutputStream outputStream = new ByteArrayOutputStream();
 
@@ -29,7 +29,7 @@ class CommandPromptIntefaceTest {
     void handleExit() {
         Scanner scanner = new Scanner("exit");
 
-        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS, GOODBYE)
@@ -41,7 +41,7 @@ class CommandPromptIntefaceTest {
     void handleAddItemCommand(String command, List<String> expectedOutputLines) {
         Scanner scanner = new Scanner(joinedByNewline(command, "exit"));
 
-        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).contains(joinedByNewline(expectedOutputLines));
     }
@@ -50,7 +50,7 @@ class CommandPromptIntefaceTest {
     void checkoutWithItemsTest() {
         Scanner scanner = new Scanner(joinedByNewline("add 1 Bread", "checkout"));
 
-        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
@@ -62,7 +62,7 @@ class CommandPromptIntefaceTest {
         Scanner scanner = new Scanner(joinedByNewline("asdfsafa", "add 1 Bread", "checkout"));
 
         assertTimeoutPreemptively(ofMillis(100), () -> {
-                    CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+                    CommandPromptInterface.start(scanner, new PrintStream(outputStream));
                     assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                             joinedByNewline(GREETING, INSTRUCTIONS,
                                     "? unknown command 'asdfsafa'",
@@ -77,7 +77,7 @@ class CommandPromptIntefaceTest {
     void handleUnknownStockItems() {
         Scanner scanner = new Scanner(joinedByNewline("add 1 Cheese","add 1 Butter", "add 1 Bread", "checkout"));
 
-        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS,
@@ -92,7 +92,7 @@ class CommandPromptIntefaceTest {
     void negativeQuantitiesHRejectedGracefully() {
         Scanner scanner = new Scanner(joinedByNewline("add -1 Bread", "checkout"));
 
-        CommandPromptInteface.start(scanner, new PrintStream(outputStream));
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS,

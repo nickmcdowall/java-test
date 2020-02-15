@@ -14,7 +14,7 @@ import static java.lang.String.format;
 import static java.time.LocalDate.now;
 import static java.util.regex.Pattern.compile;
 
-public class CommandPromptInteface {
+public class CommandPromptInterface {
 
     public static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
     public static final String GREETING = "~~ Welcome to Henry’s Grocery! Use the following commands to purchase items. ~~";
@@ -29,7 +29,7 @@ public class CommandPromptInteface {
     }
 
     public static void start(Scanner scanner, PrintStream out) {
-        new CommandPromptInteface(scanner, out);
+        new CommandPromptInterface(scanner, out);
     }
 
     private final Scanner scanner;
@@ -38,7 +38,7 @@ public class CommandPromptInteface {
     private final StockConfig stockConfig = new StockConfig();
     private Application app = appConfig.getApplication();
 
-    private CommandPromptInteface(Scanner scanner, PrintStream out) {
+    private CommandPromptInterface(Scanner scanner, PrintStream out) {
         this.scanner = scanner;
         this.out = out;
         engageWithUser();
