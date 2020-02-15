@@ -47,19 +47,26 @@ class CommandPromptInterfaceTest {
     }
 
     @Test
-    void checkoutWithItemsTest() {
+    void checkoutWithItem() {
         Scanner scanner = new Scanner(joinedByNewline("add 1 Bread", "checkout"));
 
         CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
-                joinedByNewline(GREETING, INSTRUCTIONS, "+ 1 Bread added", "= [Total Cost (today): 0.80]")
+                joinedByNewline(GREETING, INSTRUCTIONS,
+                        "+ 1 Bread added",
+                        "= [Total Cost (today +0): 0.80]"
+                )
         );
     }
 
     @Test
     void doesNotHangWithUnknownCommands() {
-        Scanner scanner = new Scanner(joinedByNewline("asdfsafa", "add 1 Bread", "checkout"));
+        Scanner scanner = new Scanner(joinedByNewline(
+                "asdfsafa",
+                "add 1 Bread",
+                "checkout"
+        ));
 
         assertTimeoutPreemptively(ofMillis(100), () -> {
                     CommandPromptInterface.start(scanner, new PrintStream(outputStream));
@@ -67,7 +74,7 @@ class CommandPromptInterfaceTest {
                             joinedByNewline(GREETING, INSTRUCTIONS,
                                     "? unknown command 'asdfsafa'",
                                     "+ 1 Bread added",
-                                    "= [Total Cost (today): 0.80]")
+                                    "= [Total Cost (today +0): 0.80]")
                     );
                 }
         );
@@ -75,7 +82,12 @@ class CommandPromptInterfaceTest {
 
     @Test
     void handleUnknownStockItems() {
-        Scanner scanner = new Scanner(joinedByNewline("add 1 Cheese","add 1 Butter", "add 1 Bread", "checkout"));
+        Scanner scanner = new Scanner(joinedByNewline(
+                "add 1 Cheese",
+                "add 1 Butter",
+                "add 1 Bread",
+                "checkout"
+        ));
 
         CommandPromptInterface.start(scanner, new PrintStream(outputStream));
 
@@ -84,7 +96,7 @@ class CommandPromptInterfaceTest {
                         "! No stock item exists with key: Cheese",
                         "! No stock item exists with key: Butter",
                         "+ 1 Bread added",
-                        "= [Total Cost (today): 0.80]")
+                        "= [Total Cost (today +0): 0.80]")
         );
     }
 
@@ -97,7 +109,46 @@ class CommandPromptInterfaceTest {
         assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
                 joinedByNewline(GREETING, INSTRUCTIONS,
                         "! negative quantities not supported",
-                        "= [Total Cost (today): 0.00]")
+                        "= [Total Cost (today +0): 0.00]")
+        );
+    }
+
+    @Test
+    void checkoutOnAFutureDate() {
+        Scanner scanner = new Scanner(joinedByNewline(
+                "add 1 Apple",
+                "checkout today +1",
+                "checkout today +3")
+        );
+
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                joinedByNewline(GREETING, INSTRUCTIONS,
+                        "+ 1 Apple added",
+                        "= [Total Cost (today +1): 0.10]",
+                        "= [Total Cost (today +3): 0.09]"
+                )
+        );
+    }
+
+    @Test
+    void checkoutOnAPastDate() {
+        Scanner scanner = new Scanner(joinedByNewline(
+                "add 2 Soup add 1 Bread",
+                "checkout today -1",
+                "checkout today -2")
+        );
+
+        CommandPromptInterface.start(scanner, new PrintStream(outputStream));
+
+        assertThat(outputStream.toString()).isEqualToIgnoringWhitespace(
+                joinedByNewline(GREETING, INSTRUCTIONS,
+                        "+ 2 Soup added",
+                        "+ 1 Bread added",
+                        "= [Total Cost (today -1): 1.70]",
+                        "= [Total Cost (today -2): 2.10]"
+                )
         );
     }
 

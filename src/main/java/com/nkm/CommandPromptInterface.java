@@ -5,24 +5,28 @@ import com.nkm.config.StockConfig;
 import com.nkm.stock.NoSuchStockItemException;
 
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
 import static java.lang.String.format;
 import static java.time.LocalDate.now;
+import static java.util.Optional.ofNullable;
 import static java.util.regex.Pattern.compile;
 
 public class CommandPromptInterface {
 
     public static final Pattern ADD_ITEM_PATTERN = compile("add ([-+]?[0-9]+) ([A-Za-z]+)");
+    private static final Pattern CHECKOOUT_PATTERN = compile("checkout( today ([+-][0-9]+))?");
     public static final String GREETING = "~~ Welcome to Henry’s Grocery! Use the following commands to purchase items. ~~";
     public static final String GOODBYE = "Bye";
     public static final String INSTRUCTIONS =
-            " ~ Type 'add <x> <ItemType>' to add x number of items to the basket.\n" +
+            " ~ Type 'add <x> <ItemType>' to add x number of items to the basket. e.g. 'add 1 Milk'\n" +
                     " ~ Type 'exit' to quit to application.\n" +
-                    " ~ Type 'checkout' to get the final price.";
+                    " ~ Type 'checkout' or 'checkout today [+/-]<x>' to get the total cost for a relative day. e.g. 'checkout today +5'\n";
 
     public static void main(String[] args) {
         start(new Scanner(System.in), System.out);
@@ -57,12 +61,20 @@ public class CommandPromptInterface {
                 continue;
             }
             if (scanner.hasNext("checkout")) {
-                scanner.nextLine();
-                out.println(format("= [Total Cost (today): %.2f]", app.priceUp(now())));
+                processCheckout(scanner.nextLine());
                 continue;
             }
             String unknown = scanner.nextLine();
             out.println(format("? unknown command '%s'", unknown));
+        }
+    }
+
+    private void processCheckout(String text) {
+        Matcher matcher = CHECKOOUT_PATTERN.matcher(text);
+        while (matcher.find()) {
+            String offset = ofNullable(matcher.group(2)).orElse("+0");
+            LocalDate whenBought = now().plusDays(parseLong(offset));
+            out.println(format("= [Total Cost (today %s): %.2f]", offset, app.priceUp(whenBought)));
         }
     }
 
