@@ -20,7 +20,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public class PricingServiceTest {
 
-    private static final Soup TIN_SOUP = new Soup(0.65);
+    private static final Soup SOUP = new Soup(0.65);
     private static final Bread BREAD = new Bread(0.80);
     private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
@@ -30,14 +30,14 @@ public class PricingServiceTest {
     @ValueSource(doubles = {
             0.8, 0.5, 0.4, 0.3, 0.0,
     })
-    void discountAppliedWhenPaidOnValidDiscountDate(double discountAmount) {
+    void discountAppliedWhenPaidOnValidDiscountDate(double expectedDiscount) {
         pricingService = new PricingService(
-                new DateRangeDiscount(today(), aFixedDiscountOf(discountAmount)));
+                new DateRangeDiscount(today(), aFixedDiscountOf(expectedDiscount)));
 
         Basket basket = new Basket().with(1, BREAD);
 
         assertThat(pricingService.price(basket, today()))
-                .isEqualTo(basket.totalCost() - discountAmount, OFFSET);
+                .isEqualTo(basket.totalCost() - expectedDiscount, OFFSET);
     }
 
     @ParameterizedTest
@@ -79,8 +79,8 @@ public class PricingServiceTest {
         return Stream.of(
                 arguments(new Basket()),
                 arguments(new Basket().with(1, BREAD)),
-                arguments(new Basket().with(1, TIN_SOUP)),
-                arguments(new Basket().with(3, TIN_SOUP).with(2, BREAD))
+                arguments(new Basket().with(1, SOUP)),
+                arguments(new Basket().with(3, SOUP).with(2, BREAD))
         );
     }
 
