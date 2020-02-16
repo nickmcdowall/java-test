@@ -12,7 +12,7 @@ class MultiBuyGetItemDiscountTest {
 
     private final MultiBuyGetItemDiscount discount = new MultiBuyGetItemDiscount(2, "Bread", 0.5, "Soup");
 
-    @ParameterizedTest(name = "{0} loaves, {1} soups with total discount: {2}")
+    @ParameterizedTest(name = "{0} loaves, {1} soups with expected discount: {2}")
     @CsvSource({
             "1, 1, 0",
             "2, 1, 50",
@@ -31,7 +31,7 @@ class MultiBuyGetItemDiscountTest {
                 .add(noOfSoups, new StockItem("Soup", 100.00))
         );
 
-        assertThat(discountCalculated).isEqualTo(expectedDiscount, Offset.offset(0.001));
+        assertThat(discountCalculated).isEqualTo(expectedDiscount);
     }
 
 }

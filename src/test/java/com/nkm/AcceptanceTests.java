@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AcceptanceTests {
 
-    private static final Offset<Double> ACCEPTABLE_OFFSET = Offset.offset(0.001);
+    private static final Offset<Double> ACCEPTABLE_ROUNDING_OFFSET = Offset.offset(0.0000001);
 
     private final Application application = new ApplicationConfig().getApplication();
     private final StockRepository stockRepository = new StockRepository();
@@ -26,39 +26,39 @@ public class AcceptanceTests {
     private final Item milk = stockRepository.getItemByKey("Milk");
 
     @ParameterizedTest
-    @ValueSource(ints = {-1, 0, +1, +2, +3, +4, +5})
-    void multiSoupOfferWhenBoughtInDiscountWindow(int offsetPurchaseDate) {
+    @ValueSource(ints = {-1, 0, +1, +2, +3, +4, +5, +6})
+    void multiSoupOfferWhenBoughtInDiscountWindow(int relativePurchaseDate) {
         application.addBasketItem(3, soup);
         application.addBasketItem(2, bread);
 
-        assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.15, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(now().plusDays(relativePurchaseDate))).isEqualTo(3.15, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-2, +7})
-    void multiSoupOfferNotAppliedWhenBoughtOutsideDiscountWindow(int offsetPurchaseDate) {
+    void multiSoupOfferNotAppliedWhenBoughtOutsideDiscountWindow(int relativePurchaseDate) {
         application.addBasketItem(3, soup);
         application.addBasketItem(2, bread);
 
-        assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(3.55, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(now().plusDays(relativePurchaseDate))).isEqualTo(3.55, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, +1, +2})
-    void appleDiscountNotAppliedWhenBoughtBeforeDiscountWindow(int offsetPurchaseDate) {
+    void appleDiscountNotAppliedWhenBoughtBeforeDiscountWindow(int relativePurchaseDate) {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, milk);
 
-        assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(now().plusDays(relativePurchaseDate))).isEqualTo(1.9, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @ParameterizedTest
     @ValueSource(ints = {+3, +5, +20})
-    void appleDiscountIsAppliedDuringDiscountWindow(int offsetPurchaseDate) {
+    void appleDiscountIsAppliedDuringDiscountWindow(int relativePurchaseDate) {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, milk);
 
-        assertThat(application.priceUp(now().plusDays(offsetPurchaseDate))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(now().plusDays(relativePurchaseDate))).isEqualTo(1.84, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class AcceptanceTests {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, milk);
 
-        assertThat(application.priceUp(lastDayOfMonth(nextMonth()))).isEqualTo(1.84, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(lastDayOfMonth(nextMonth()))).isEqualTo(1.84, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AcceptanceTests {
         application.addBasketItem(6, apple);
         application.addBasketItem(1, milk);
 
-        assertThat(application.priceUp(lastDayOfMonth(nextMonth()).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(lastDayOfMonth(nextMonth()).plusDays(1))).isEqualTo(1.9, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class AcceptanceTests {
         application.addBasketItem(2, soup);
         application.addBasketItem(1, bread);
 
-        assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_OFFSET);
+        assertThat(application.priceUp(now().plusDays(5))).isEqualTo(1.97, ACCEPTABLE_ROUNDING_OFFSET);
     }
 
     @Test
@@ -92,7 +92,5 @@ public class AcceptanceTests {
                 application.addBasketItem(-1, apple)
         );
     }
-
-
 
 }

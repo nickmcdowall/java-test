@@ -5,7 +5,6 @@ import com.nkm.discount.Discount;
 import com.nkm.stock.Basket;
 import com.nkm.stock.Item;
 import com.nkm.stock.StockItem;
-import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,7 +22,6 @@ public class PricingServiceTest {
 
     private static final Item SOUP = new StockItem("Soup", 0.65);
     private static final Item BREAD = new StockItem("Bread", 0.80);
-    private static final Offset<Double> OFFSET = Offset.offset(0.0001);
 
     private PricingService pricingService;
 
@@ -38,7 +36,7 @@ public class PricingServiceTest {
         Basket basket = new Basket().add(1, BREAD);
 
         assertThat(pricingService.price(basket, today()))
-                .isEqualTo(basket.totalCost() - expectedDiscount, OFFSET);
+                .isEqualTo(basket.totalCost() - expectedDiscount);
     }
 
     @ParameterizedTest
@@ -52,7 +50,7 @@ public class PricingServiceTest {
         Basket basket = new Basket().add(5, BREAD);
 
         assertThat(pricingService.price(basket, now().plusDays(paymentDayOffset)))
-                .isEqualTo(basket.totalCost(), OFFSET);
+                .isEqualTo(basket.totalCost());
     }
 
     @ParameterizedTest
@@ -60,7 +58,7 @@ public class PricingServiceTest {
     void fullPriceWhenNoDiscountsAvailable(Basket basket) {
         pricingService = new PricingService();
 
-        assertThat(pricingService.price(basket, now())).isEqualTo(basket.totalCost(), OFFSET);
+        assertThat(pricingService.price(basket, now())).isEqualTo(basket.totalCost());
     }
 
     @Test

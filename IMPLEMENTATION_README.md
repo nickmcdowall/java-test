@@ -1,6 +1,6 @@
 # Java Exercise
 
-Note that `Java 11` was used to complete this exercise.
+__Note that `Java 11` was used to complete this exercise.__
 
 ## Assumptions
   1. Using `double`s are sufficient for this exercise  - would normally use `BigDecimal` for real world monetary related implementations due to risk of double rounding errors.
@@ -29,6 +29,8 @@ To interact with the application you can:
 
 #### Inputs
 
+__Note that commands and items are case sensitive.__
+
 Available options are `exit`, `stock`, `add <count> <item>`, `checkout`, `exit`
 
 Examples:
@@ -36,7 +38,7 @@ Examples:
 * `add 1 Bread`
 * `add 2 Milk`
 * `add 1 Apple add 1 Soup` # Add commands can be chained
-* `checkout` # Defaults to today
+* `checkout` # Defaults to today (does not empty basket so can continue to price up for other days or add more items)
 * `checkout today +1` # Price if bought on a future date
 * `checkout today -5` # Price if bought on a past date
 * `exit`
